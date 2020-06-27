@@ -180,15 +180,32 @@ def station_dialog(req, res):
         sessionStorage[user_id]['data'] = paron
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
-    if 'антонимы' in req['request']['original_utterance'].lower():
+    elif 'антонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'антонимы'
         antonym = copy.deepcopy(ant)
         random.shuffle(antonym)
         sessionStorage[user_id]['data'] = antonym
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
-    if 'синонимы' in req['request']['original_utterance'].lower():
+    elif 'синонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'синонимы'
+    if sessionStorage[user_id]['mode'] == 'паронимы':
+        word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
+        if not sessionStorage[user_id]['last']:
+            res['response']['text'] = f'Подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+            sessionStorage[user_id]['last'] = True
+        else:
+            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer']
+            if answer == req['request']['original_utterance'].lower():
+                res['response']['text'] = "Верно!"
+            else:
+                res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
+
+        res['response']['text'] += f'Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+        if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
+            random.shuffle(sessionStorage[user_id]['data'])
+            sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['id'] += 1
     
 
 
