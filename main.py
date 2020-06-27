@@ -9,6 +9,8 @@ sessionStorage = {}
 app = Flask('')
 with open('Data.json', encoding='utf8') as f:
     ant = json.loads(f.read())['antonimy']  # массив из словарей дат
+with open('Data.json', encoding='utf8') as f:
+    par = json.loads(f.read())['paron']  # массив из словарей 
 
 @app.route('/post', methods=['POST'])
 def main():
@@ -142,9 +144,8 @@ def write_in_base(user_id):
 def config(user_id):
     sessionStorage[user_id] = {
         'nick': None,
-        'word_id': 0,
+        'd': 0,
         'mode': None,
-        ''  
     }
 
 def station_dialog(req, res):
@@ -174,8 +175,18 @@ def station_dialog(req, res):
         return
     if 'паронимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'паронимы'
+        paron = copy.deepcopy(par)
+        random.shuffle(paron)
+        sessionStorage[user_id]['data'] = paron
+        sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['last'] = False
     if 'антонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'антонимы'
+        antonym = copy.deepcopy(ant)
+        random.shuffle(antonym)
+        sessionStorage[user_id]['data'] = antonym
+        sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['last'] = False
     if 'синонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'синонимы'
     
