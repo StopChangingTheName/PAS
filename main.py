@@ -2,6 +2,7 @@ import copy
 import json
 import random
 from flask import Flask, request, render_template
+from threading import Thread
 
 
 sessionStorage = {}
@@ -96,8 +97,9 @@ def handle_dialog(req, res):
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
-        res['response']['card'] = modes_list(f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n'
-                                             f'У меня есть несколько режимов, просто нажми на кнопку 👇 или скажи, чтобы выбрать их.')
+        res['response']['card'] = modes_list(f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n')
+        res['response']['tts'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n. ' \
+            f'У меня есть несколько режимов, просто нажми на кнопку или скажи, чтобы выбрать их.'
 
         res['user_state_update'] = {
             'nick': sessionStorage[user_id]['nick']
@@ -118,5 +120,8 @@ def keep_alive():
 
 
 if __name__ == '__main__':
+    from flask_ngrok import run_with_ngrok
+    run_with_ngrok(app)
+    app.run()
     #keep_alive()
     # app.run()
