@@ -4,9 +4,9 @@ import random
 from flask import Flask, request, render_template
 from threading import Thread
 
+
 sessionStorage = {}
 app = Flask('')
-
 
 @app.route('/post', methods=['POST'])
 def main():
@@ -88,9 +88,8 @@ def handle_dialog(req, res):
             'par': 0
         }
         try:
-            res['response']['text'] = \
-                f"{req['state']['user']['nick']}! Продолжим тренировку! Твои очки: заглушка"
             sessionStorage[user_id]['nick'] = req['state']['user']['nick']
+            res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}!'
             res['response']['card'] = modes_list(f"Давно не виделись, {sessionStorage[user_id]['nick']}!")
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
@@ -105,23 +104,9 @@ def handle_dialog(req, res):
             'nick': sessionStorage[user_id]['nick']
         }
 
-def config(user_id):
-    sessionStorage[user_id] = {
-        "nick": None,
-        'mode': '',
-        'word_id': 0,
-    }
 
 def station_dialog(req, res):
-    user_id = req['session']['user_id']
-    if res['response']['end_session'] is True:
-        write_in_base(user_id)
-    if req['session']['new']:
-        config(user_id)
-        res['response']['test'] = 'Привет! Добро пожаловать в словесную игру ПАС! Правила я расскажу чуть позже, а сейчас скажи свое имя, пожалуйста:'
-        sessionStorage[user_id]['nick'] = req['request']['original_utterance'].lower()
-
-
+    pass
 
 
 def run():
