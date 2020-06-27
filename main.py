@@ -68,6 +68,13 @@ def modes_list(phrase):
         ]
     }
 
+def write_in_state(user_id):
+    return {
+        'nick': sessionStorage[user_id]['nick'],
+        'par': sessionStorage[user_id]['par'],
+        'sin': sessionStorage[user_id]['sin'],
+        'ant': sessionStorage[user_id]['ant']
+    }
 
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
@@ -97,7 +104,13 @@ def handle_dialog(req, res):
         }
         try:
             sessionStorage[user_id]['nick'] = req['state']['user']['nick']
-            res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}!'
+            sessionStorage[user_id]['ant'] = req['state']['user']['ant']
+            sessionStorage[user_id]['sin'] = req['state']['user']['sin']
+            sessionStorage[user_id]['par'] = req['state']['user']['par']
+
+            res['response']['tts'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
+                f'Твои очки: антонимы: {sessionStorage[user_id]["ant"]}, синонимы: {sessionStorage[user_id]["sin"]} ' \
+                f'паронимы: {sessionStorage[user_id]["par"]}'
             res['response']['card'] = modes_list(f"Давно не виделись, {sessionStorage[user_id]['nick']}!")
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
@@ -150,6 +163,13 @@ def handle_dialog(req, res):
             answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer']
             if answer == req['request']['original_utterance'].lower():
                 res['response']['text'] = "Верно!"
+                if sessionStorage[user_id]['mode'] == 'антоним':
+                    sessionStorage[user_id]['ant'] += 1
+                elif sessionStorage[user_id]['mode'] == 'синоним':
+                    sessionStorage[user_id]['sin'] += 1
+                elif sessionStorage[user_id]['mode'] == 'пароним':
+                    sessionStorage[user_id]['par'] += 1
+                write_in_state(user_id)
             else:
                 res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
 
@@ -171,7 +191,7 @@ def handle_dialog(req, res):
 def station_dialog(req, res):
     user_id = req['session']['user_id']
     if res['response']['end_session'] is True:
-        write_in_base(user_id)
+        #write_in_base(user_id)
     if req['session']['new']:
         sessionStorage[user_id] = {
             'nick': None,
