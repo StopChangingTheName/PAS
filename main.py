@@ -114,6 +114,11 @@ def handle_dialog(req, res):
             res['response']['card'] = modes_list(f"Давно не виделись!")
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
+            res['user_state_update'] = {"nick": None,
+      "test_count": None,
+      "pic_count": None,
+      "ter_count": None,
+      "cul_count": None}
         return
     print('НУ ЭТО КЛИНИКА РЕБЯТ', sessionStorage[user_id]['nick'])
     if sessionStorage[user_id]['nick'] is None:
@@ -171,7 +176,7 @@ def handle_dialog(req, res):
                     sessionStorage[user_id]['sin'] += 1
                 elif sessionStorage[user_id]['mode'] == 'пароним':
                     sessionStorage[user_id]['par'] += 1
-                write_in_state(user_id)
+                res['user_state_update'] = write_in_state(user_id)
             else:
                 res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
 
@@ -290,8 +295,8 @@ def keep_alive():
 
 
 if __name__ == '__main__':
-    #from flask_ngrok import run_with_ngrok
-    #run_with_ngrok(app)
-    #app.run()
-    keep_alive()
+    from flask_ngrok import run_with_ngrok
+    run_with_ngrok(app)
+    app.run()
+    #keep_alive()
     # app.run()
