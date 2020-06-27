@@ -9,8 +9,6 @@ sessionStorage = {}
 app = Flask('')
 with open('Data.json', encoding='utf8') as f:
     ant = json.loads(f.read())['antonimy']  # массив из словарей дат
-with open('Data.json', encoding='utf8') as f:
-    par = json.loads(f.read())['paron']  # массив из словарей 
 
 @app.route('/post', methods=['POST'])
 def main():
@@ -138,15 +136,7 @@ def handle_dialog(req, res):
 
     return
 
-def write_in_base(user_id):
-    pass
 
-def config(user_id):
-    sessionStorage[user_id] = {
-        'nick': None,
-        'd': 0,
-        'mode': None,
-    }
 
 def station_dialog(req, res):
     user_id = req['session']['user_id']
