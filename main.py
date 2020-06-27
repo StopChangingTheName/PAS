@@ -192,6 +192,7 @@ def station_dialog(req, res):
     user_id = req['session']['user_id']
     if res['response']['end_session'] is True:
         #write_in_base(user_id)
+        print(0)
     if req['session']['new']:
         sessionStorage[user_id] = {
             'nick': None,
@@ -202,12 +203,12 @@ def station_dialog(req, res):
 
         }
         try:
-            res['response']['text'] = 'Привет еще раз!'
+            res['response']['text'] = 'Привет еще раз! Продолжим игру! Выбирай режим: паронимы, антонимы или синонимы.'
             sessionStorage[user_id]['nick'] = req['state']['user']['nick']
 
         except Exception:
             res['response'][
-                'text'] = 'Привет! Добро пожаловать в ПАС!' \
+                'text'] = 'Привет! Добро пожаловать в словесную игру ПАС!' \
                           'Скажи своё имя для сохранения результатов:'
         return
     if sessionStorage[user_id]['nick'] is None:
@@ -236,7 +237,11 @@ def station_dialog(req, res):
         sessionStorage[user_id]['last'] = False
     if 'синонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'синонимы'
-
+        sinonym = copy.deepcopy(sin)
+        random.shuffle(sinonym)
+        sessionStorage[user_id]['data'] = sinonym
+        sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['last'] = False
     if sessionStorage[user_id]['mode'] == 'паронимы':
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
