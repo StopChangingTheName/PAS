@@ -114,11 +114,12 @@ def handle_dialog(req, res):
             res['response']['card'] = modes_list(f"Давно не виделись!")
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
-            res['user_state_update'] = {"nick": None,
-      "test_count": None,
-      "pic_count": None,
-      "ter_count": None,
-      "cul_count": None}
+            if 'test_count' in res['user_state_update']:
+                res['user_state_update'] = {"nick": None,
+          "test_count": None,
+          "pic_count": None,
+          "ter_count": None,
+          "cul_count": None}
         return
     print('НУ ЭТО КЛИНИКА РЕБЯТ', sessionStorage[user_id]['nick'])
     if sessionStorage[user_id]['nick'] is None:
