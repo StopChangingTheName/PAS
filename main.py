@@ -7,6 +7,8 @@ from threading import Thread
 
 sessionStorage = {}
 app = Flask('')
+with open('Data.json', encoding='utf8') as f:
+    ant = json.loads(f.read())['antonimy']  # массив из словарей дат
 
 @app.route('/post', methods=['POST'])
 def main():
@@ -103,6 +105,9 @@ def handle_dialog(req, res):
         res['user_state_update'] = {
             'nick': sessionStorage[user_id]['nick']
         }
+        return
+
+
 
 
 def station_dialog(req, res):
