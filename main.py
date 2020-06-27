@@ -103,10 +103,10 @@ def handle_dialog(req, res):
             'last': False
         }
         try:
-            sessionStorage[user_id]['nick'] = req['state']['user']['nick']
             sessionStorage[user_id]['ant'] = req['state']['user']['ant']
             sessionStorage[user_id]['sin'] = req['state']['user']['sin']
             sessionStorage[user_id]['par'] = req['state']['user']['par']
+            sessionStorage[user_id]['nick'] = req['state']['user']['nick']
 
             res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
                 f'Твои очки: антонимы: {sessionStorage[user_id]["ant"]}, синонимы: {sessionStorage[user_id]["sin"]} ' \
@@ -115,14 +115,13 @@ def handle_dialog(req, res):
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
         return
-            
+    print('НУ ЭТО КЛИНИКА РЕБЯТ', sessionStorage[user_id]['nick'])
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
         res['response']['card'] = modes_list(f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n')
         res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n. ' \
             f'У меня есть несколько режимов, просто нажми на кнопку или скажи, чтобы выбрать их.'
-
         res['user_state_update'] = {
             'nick': sessionStorage[user_id]['nick']
         }
