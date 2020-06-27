@@ -87,7 +87,8 @@ def handle_dialog(req, res):
             'mode': '',
             'ant': 0,
             'sin': 0,
-            'par': 0
+            'par': 0,
+            'last': False
         }
         try:
             sessionStorage[user_id]['nick'] = req['state']['user']['nick']
@@ -107,6 +108,33 @@ def handle_dialog(req, res):
         }
         return
 
+    if 'антонимы' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'антоним'
+        antonym = copy.deepcopy(ant)
+        random.shuffle(antonym)
+        sessionStorage[user_id]['data'] = antonym
+        sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['last'] = False
+
+    if sessionStorage[user_id]['mode'] == 'антоним':
+        word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
+        if not sessionStorage[user_id]['last']:
+            res['response']['text'] = f'Подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+            sessionStorage[user_id]['last'] = True
+        else:
+            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer']
+            if answer == req['request']['original_utterance'].lower():
+                res['response']['text'] = "Верно!"
+            else:
+                res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
+
+        res['response']['text'] += f'Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+        if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
+            random.shuffle(sessionStorage[user_id]['data'])
+            sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['id'] += 1
+
+    return
 
 
 

@@ -1,113 +1,108 @@
-"antonimy":
-[  
-  {
-    "question": "машина",
-    "answer": "человек"
-},
 {
-  "question": "сердце",
-  "answer": "разум"
-},
-{
-  "question": "рукопись",
-  "answer": "черновик"
-},
-{
-  "question": "труд",
-  "answer": "отдых"
-},
-{
-  "question": "команда",
-  "answer": "индивидуум"
-},
-{
-  "question": "замок",
-  "answer": "лачуга"
-},
-{
-  "question": "великан",
-  "answer": "мелочь"
-},
-{
-  "question": "плач",
-  "answer": "смех"
-},
-{
-  "question": "правка",
-  "answer": "порча"
-},
-{
-  "question": "огонь",
-  "answer": "вода"
-},
-{
-  "question": "восход",
-  "answer": "закат"
-},
-{
-  "question": "добро",
-  "answer": "зло"
-},
-{
-  "question": "утро",
-  "answer": "вечер"
-},
-{
-  "question": "мир",
-  "answer": "война"
-},
-{
-  "question": "труженик",
-  "answer": "бездельник"
-},
-{
-  "question": "лето",
-  "answer": "зима"
-},
-{
-  "question": "друг",
-  "answer": "враг"
-},
-{
-  "question": "грусть",
-  "answer": "радость"
-},
-{
-  "question": "болтун",
-  "answer": "молчун"
-},
-{
-  "question": "храбрость",
-  "answer": "трусость"
-},
-{
-  "question": "молчать",
-  "answer": "говорить"
-},
-{
-  "question": "бежать",
-  "answer": "стоять"
-},
-{
-  "question": "радоваться",
-  "answer": "огорчаться"
-},
-{
-  "question": "стемнело",
-  "answer": "рассвело"
-},
-{
-  "question": "свет",
-  "answer": "тьма"
-}
-]
-
+  "antonimy": [
+    {
+      "question": "машина",
+      "answer": "человек"
+    },
+    {
+      "question": "сердце",
+      "answer": "разум"
+    },
+    {
+      "question": "рукопись",
+      "answer": "черновик"
+    },
+    {
+      "question": "труд",
+      "answer": "отдых"
+    },
+    {
+      "question": "команда",
+      "answer": "индивидуум"
+    },
+    {
+      "question": "замок",
+      "answer": "лачуга"
+    },
+    {
+      "question": "великан",
+      "answer": "мелочь"
+    },
+    {
+      "question": "плач",
+      "answer": "смех"
+    },
+    {
+      "question": "правка",
+      "answer": "порча"
+    },
+    {
+      "question": "огонь",
+      "answer": "вода"
+    },
+    {
+      "question": "восход",
+      "answer": "закат"
+    },
+    {
+      "question": "добро",
+      "answer": "зло"
+    },
+    {
+      "question": "утро",
+      "answer": "вечер"
+    },
+    {
+      "question": "мир",
+      "answer": "война"
+    },
+    {
+      "question": "труженик",
+      "answer": "бездельник"
+    },
+    {
+      "question": "лето",
+      "answer": "зима"
+    },
+    {
+      "question": "друг",
+      "answer": "враг"
+    },
+    {
+      "question": "грусть",
+      "answer": "радость"
+    },
+    {
+      "question": "болтун",
+      "answer": "молчун"
+    },
+    {
+      "question": "храбрость",
+      "answer": "трусость"
+    },
+    {
+      "question": "молчать",
+      "answer": "говорить"
+    },
+    {
+      "question": "бежать",
+      "answer": "стоять"
+    },
+    {
+      "question": "радоваться",
+      "answer": "огорчаться"
+    },
+    {
+      "question": "стемнело",
+      "answer": "рассвело"
+    },
+    {
+      "question": "свет",
+      "answer": "тьма"
+    }
+  ],
 "paron":
 [
-  {
-  "question": "ПАРОНИМЫ",
-  "answer": ""
-},
 {
   "question": "абонемент",
   "answer": "абонент"
@@ -125,35 +120,108 @@
   "answer": "автобиографичный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "автоматический",
+  "answer": "автоматичный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "адресант",
+  "answer": "адресат"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "академический",
+  "answer": "академичный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "аккордный",
+  "answer": "аккордовый"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "бабий",
+  "answer": "бабский"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "барский",
+  "answer": "барственный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "бедный",
+  "answer": "бедственный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "безделица",
+  "answer": "бездельница"
 },
-]
+{
+  "question": "безликий",
+  "answer": "безличный"
+},
+{
+  "question": "безответный",
+  "answer": "безответственный"
+},
+{
+  "question": "безыскусный",
+  "answer": "безыскусственный"
+},
+{
+  "question": "белеть",
+  "answer": "белить"
+},
+{
+  "question": "вакансия",
+  "answer": "вакация"
+},
+{
+  "question": "вакхальный",
+  "answer": "вакханальный"
+},
+{
+  "question": "варкий",
+  "answer": "варочный"
+},
+{
+  "question": "вассальный",
+  "answer": "вассальский"
+},
+{
+  "question": "вафельница",
+  "answer": "вафельщица"
+},
+{
+  "question": "вбежать",
+  "answer": "взбежать"
+},
+{
+  "question": "вбить",
+  "answer": "взбить"
+},
+{
+  "question": "ввалить",
+  "answer": "взвалить"
+},
+{
+  "question": "гагарий",
+  "answer": "гагаровый"
+},
+{
+  "question": "гадальный",
+  "answer": "гадательный"
+},
+{
+  "question": "гарантийный",
+  "answer": "гарантированный"
+},
+{
+  "question": "дарёный",
+  "answer": "даровой"
+},
+{
+  "question": "дармоедный",
+  "answer": "дармоедский"
+},
+{
+  "question": "двигатель",
+  "answer": "движитель"
+}
+  ]
+}
