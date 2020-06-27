@@ -114,7 +114,7 @@ def handle_dialog(req, res):
             res['response']['card'] = modes_list(f"Давно не виделись!")
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
-            
+
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
@@ -246,8 +246,7 @@ def station_dialog(req, res):
         sessionStorage[user_id]['data'] = sinonym
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
-    if 'помощь' in req['request']['original_utterance'].lower():
-        res['response']['text'] = 'У меня есть 3 режима: паронимы, антонимы и синонимы. В каждом режиме я буду говорить тебе слово, а тебе нужно придумать слово из 3 этих категорий.'
+        
     if sessionStorage[user_id]['mode'] in ['антоним', 'пароним', 'синоним']:
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
@@ -273,7 +272,7 @@ def station_dialog(req, res):
                 sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['id'] += 1
     else:
-        res['response']['text'] = 'Прости, не понимаю тебя. Скажи помощь, и я расскажу тебе правила игры.'
+        res['response']['text'] = 'Прости, не понимаю тебя. Выбери режим: паронимы, антонимы или синонимы.'
     return
     
 
