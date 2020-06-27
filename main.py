@@ -265,7 +265,7 @@ def station_dialog(req, res):
                     sessionStorage[user_id]['sin'] += 1
                 elif sessionStorage[user_id]['mode'] == 'пароним':
                     sessionStorage[user_id]['par'] += 1
-                write_in_state(user_id)
+                res['user_state_update'] = write_in_state(user_id)
             else:
                 res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
 
