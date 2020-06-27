@@ -10,7 +10,10 @@ app = Flask('')
 with open('Data.json', encoding='utf8') as f:
     ant = json.loads(f.read())['antonimy']  # массив из словарей дат
 with open('Data.json', encoding='utf8') as f:
-    par = json.loads(f.read())['paron']
+    par = json.loads(f.read())['paron']  # массив из словарей дат
+with open('Data.json', encoding='utf8') as f:
+    sin = json.loads(f.read())['sinonimy']  # массив из словарей дат
+
 @app.route('/post', methods=['POST'])
 def main():
     response = {
@@ -108,6 +111,7 @@ def handle_dialog(req, res):
             'nick': sessionStorage[user_id]['nick']
         }
         return
+
     if 'антонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'антоним'
         antonym = copy.deepcopy(ant)
@@ -116,15 +120,7 @@ def handle_dialog(req, res):
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
 
-    if 'паронимы' in req['request']['original_utterance'].lower():
-        sessionStorage[user_id]['mode'] = 'пароним'
-        paronym = copy.deepcopy(par)
-        random.shuffle(par)
-        sessionStorage[user_id]['data'] = paronym
-        sessionStorage[user_id]['id'] = 0
-        sessionStorage[user_id]['last'] = False
-
-    if sessionStorage[user_id]['mode'] in ['антоним', 'пароним']:
+    if sessionStorage[user_id]['mode'] == 'антоним':
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
             res['response']['text'] = f'Подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
@@ -136,15 +132,12 @@ def handle_dialog(req, res):
             else:
                 res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
 
-            res['response']['text'] += f'Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
-            if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
-                random.shuffle(sessionStorage[user_id]['data'])
-                sessionStorage[user_id]['id'] = 0
+        res['response']['text'] += f'Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+        if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
+            random.shuffle(sessionStorage[user_id]['data'])
+            sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['id'] += 1
-        res['response']['buttons'] = [
-            {'title': suggest, 'hide': True}
-            for suggest in sessionStorage[user_id]['slicedsuggests']
-        ]
+
     return
 
 
@@ -181,15 +174,16 @@ def station_dialog(req, res):
         sessionStorage[user_id]['data'] = paron
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
-    elif 'антонимы' in req['request']['original_utterance'].lower():
+    if 'антонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'антонимы'
         antonym = copy.deepcopy(ant)
         random.shuffle(antonym)
         sessionStorage[user_id]['data'] = antonym
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
-    elif 'синонимы' in req['request']['original_utterance'].lower():
+    if 'синонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'синонимы'
+
     if sessionStorage[user_id]['mode'] == 'паронимы':
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
@@ -207,6 +201,27 @@ def station_dialog(req, res):
             random.shuffle(sessionStorage[user_id]['data'])
             sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['id'] += 1
+
+    if sessionStorage[user_id]['mode'] == 'антонимы':
+        word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
+        if not sessionStorage[user_id]['last']:
+            res['response']['text'] = f'Подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+            sessionStorage[user_id]['last'] = True
+        else:
+            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer']
+            if answer == req['request']['original_utterance'].lower():
+                res['response']['text'] = "Верно!"
+            else:
+                res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
+
+        res['response']['text'] += f'Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+        if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
+            random.shuffle(sessionStorage[user_id]['data'])
+            sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['id'] += 1
+    else:
+        res['response']['text'] = 'Прости, не понимаю тебя. Скажи помощь, и я расскажу тебе правила игры.'
+    return
     
 
 
