@@ -111,7 +111,7 @@ def handle_dialog(req, res):
             res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
                 f'Твои очки: антонимы: {sessionStorage[user_id]["ant"]}, синонимы: {sessionStorage[user_id]["sin"]} ' \
                 f'паронимы: {sessionStorage[user_id]["par"]}'
-            res['response']['card'] = modes_list(f"Давно не виделись, {sessionStorage[user_id]['nick']}!")
+            res['response']['card'] = modes_list(f"Давно не виделись!")
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
         return
