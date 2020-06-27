@@ -210,18 +210,20 @@ def station_dialog(req, res):
             sessionStorage[user_id]['ant'] = req['state']['user']['ant']
             sessionStorage[user_id]['sin'] = req['state']['user']['sin']
             sessionStorage[user_id]['par'] = req['state']['user']['par']
-            res['response']['text'] = 'Привет еще раз! Продолжим игру! Выбирай режим: паронимы, антонимы или синонимы.'
 
+            res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
+                f'Твои очки: антонимы: {sessionStorage[user_id]["ant"]}, синонимы: {sessionStorage[user_id]["sin"]} ' \
+                f'паронимы: {sessionStorage[user_id]["par"]}'
         except Exception:
-            res['response'][
-                'text'] = 'Привет! Добро пожаловать в словесную игру ПАС!' \
-                          'Скажи своё имя для сохранения результатов:'
-
+            res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
+        return
+            
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
         res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n' \
                                   'У меня есть 3 режима: паронимы, синонимы, антонимы.'
+
 
         res['user_state_update'] = {
             'nick': sessionStorage[user_id]['nick']
