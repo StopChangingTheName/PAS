@@ -8,8 +8,16 @@ def main(event, context):
             'end_session': False
         },
     }
-    dialog(event,res)
+    if 'screen' in event['meta']['interfaces']:
+        dialog(event,res)
+    else:
+        station_dialog(event, res)
+    
     return json.dumps(res)
 
-def dialog(event, res):
+def dialog(req,res):
     return
+
+def station_dialog(req, res):
+    return
+    
