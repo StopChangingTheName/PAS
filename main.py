@@ -108,7 +108,7 @@ def handle_dialog(req, res):
             sessionStorage[user_id]['sin'] = req['state']['user']['sin']
             sessionStorage[user_id]['par'] = req['state']['user']['par']
 
-            res['response']['tts'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
+            res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
                 f'Твои очки: антонимы: {sessionStorage[user_id]["ant"]}, синонимы: {sessionStorage[user_id]["sin"]} ' \
                 f'паронимы: {sessionStorage[user_id]["par"]}'
             res['response']['card'] = modes_list(f"Давно не виделись, {sessionStorage[user_id]['nick']}!")
