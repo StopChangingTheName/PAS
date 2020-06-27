@@ -3,6 +3,7 @@ import json
 import random
 from flask import Flask, request, render_template
 from threading import Thread
+import sqlite3
 
 
 sessionStorage = {}
@@ -76,21 +77,18 @@ def write_in_state(user_id):
         'ant': sessionStorage[user_id]['ant']
     }
 def write_in_base(user_id):
-    con = psycopg2.connect(user="indmfojfvoiiem",
-                           password="facdfb9fe6e90a07401ae02ef4e2297fa93c2bf6d205648e5d7e062c0c8da8bb",
-                           host="ec2-54-247-78-30.eu-west-1.compute.amazonaws.com",
-                           port="5432",
-                           database="dd2pdbo5s56kui")
+    con = sqlite3.connect("users.db")
     cur = con.cursor()
-    par_count =  sessionStorage[user_id]['par'],
-    sin_count = sessionStorage[user_id]['sin'],
+    par_count =  sessionStorage[user_id]['par']
+    sin_count = sessionStorage[user_id]['sin']
     ant_count = sessionStorage[user_id]['ant']
     summa = par_count + sin_count + ant_count
+    id_ = len(cur.execute('SELECT * FROM u').fetchall())
     cur.execute(f"SELECT * FROM u WHERE nick = '{sessionStorage[user_id]['nick']}';")
     if cur.fetchone() is None:
 
         cur.execute(
-            f"INSERT INTO u VALUES (DEFAULT,'{sessionStorage[user_id]['nick']}',{par_count},{ant_count},{sin_count},{summa});")
+            f"INSERT INTO u VALUES ({id_},'{sessionStorage[user_id]['nick']}',{par_count},{ant_count},{sin_count},{summa});")
     else:
         cur.execute(
             f"UPDATE u SET (paronims, antonims, sinonims, summa) = ({par_count},{ant_count},{sin_count},{summa}) WHERE nick = '{sessionStorage[user_id]['nick']}';")
@@ -100,6 +98,8 @@ def write_in_base(user_id):
 
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
+    if res['response']['end_session'] is True:
+        write_in_base(user_id)
     if req['session']['new']:
         sessionStorage[user_id] = {
             'suggests': [
@@ -200,11 +200,13 @@ def handle_dialog(req, res):
                 elif sessionStorage[user_id]['mode'] == 'пароним':
                     sessionStorage[user_id]['par'] += 1
                 res['user_state_update'] = write_in_state(user_id)
+                write_in_base(user_id)
             else:
                 res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
 
             res['response']['text'] += f' Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
             if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
+                write_in_base(user_id)
                 random.shuffle(sessionStorage[user_id]['data'])
                 sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['id'] += 1
@@ -221,8 +223,7 @@ def handle_dialog(req, res):
 def station_dialog(req, res):
     user_id = req['session']['user_id']
     if res['response']['end_session'] is True:
-        #write_in_base(user_id)
-        print(0)
+        write_in_base(user_id)
     if req['session']['new']:
         sessionStorage[user_id] = {
             "nick": None,
