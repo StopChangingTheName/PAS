@@ -114,6 +114,7 @@ def handle_dialog(req, res):
             res['response']['card'] = modes_list(f"Давно не виделись, {sessionStorage[user_id]['nick']}!")
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
+        return
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
