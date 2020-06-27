@@ -9,6 +9,8 @@ sessionStorage = {}
 app = Flask('')
 with open('Data.json', encoding='utf8') as f:
     ant = json.loads(f.read())['antonimy']  # массив из словарей дат
+with open('Data.json', encoding='utf8') as f:
+    par = json.loads(f.read())['paron']
 @app.route('/post', methods=['POST'])
 def main():
     response = {
@@ -106,7 +108,6 @@ def handle_dialog(req, res):
             'nick': sessionStorage[user_id]['nick']
         }
         return
-
     if 'антонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'антоним'
         antonym = copy.deepcopy(ant)
@@ -115,7 +116,15 @@ def handle_dialog(req, res):
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
 
-    if sessionStorage[user_id]['mode'] == 'антоним':
+    if 'паронимы' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'пароним'
+        paronym = copy.deepcopy(par)
+        random.shuffle(par)
+        sessionStorage[user_id]['data'] = paronym
+        sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['last'] = False
+
+    if sessionStorage[user_id]['mode'] in ['антоним', 'пароним']:
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
             res['response']['text'] = f'Подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
@@ -127,12 +136,15 @@ def handle_dialog(req, res):
             else:
                 res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
 
-        res['response']['text'] += f'Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
-        if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
-            random.shuffle(sessionStorage[user_id]['data'])
-            sessionStorage[user_id]['id'] = 0
+            res['response']['text'] += f'Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+            if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
+                random.shuffle(sessionStorage[user_id]['data'])
+                sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['id'] += 1
-
+        res['response']['buttons'] = [
+            {'title': suggest, 'hide': True}
+            for suggest in sessionStorage[user_id]['slicedsuggests']
+        ]
     return
 
 
