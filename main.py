@@ -127,7 +127,7 @@ def handle_dialog(req, res):
         return
     if 'меню' in req['request']['original_utterance'].lower():
         res["response"]["card"] = modes_list("Меню")
-        res["response"]["tts"] = "Выбери режим из предложенных!"
+        res["response"]["text"] = "Выбери режим из предложенных!"
         sessionStorage[user_id]['mode'] = ''
 
     if 'антонимы' in req['request']['original_utterance'].lower():
@@ -311,8 +311,8 @@ def keep_alive():
 
 
 if __name__ == '__main__':
-    from flask_ngrok import run_with_ngrok
-    run_with_ngrok(app)
-    app.run()
-    #keep_alive()
+    #from flask_ngrok import run_with_ngrok
+    #run_with_ngrok(app)
+    #app.run()
+    keep_alive()
     # app.run()
