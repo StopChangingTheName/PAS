@@ -209,46 +209,47 @@ def station_dialog(req, res):
             sessionStorage[user_id]['ant'] = req['state']['user']['ant']
             sessionStorage[user_id]['sin'] = req['state']['user']['sin']
             sessionStorage[user_id]['par'] = req['state']['user']['par']
-            res['response']['text'] = 'Привет еще раз! Продолжим игру! Выбирай режим: паронимы, антонимы или синонимы.'
 
+            res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
+                f'Твои очки: антонимы: {sessionStorage[user_id]["ant"]}, синонимы: {sessionStorage[user_id]["sin"]} ' \
+                f'паронимы: {sessionStorage[user_id]["par"]}'
         except Exception:
-            res['response'][
-                'text'] = 'Привет! Добро пожаловать в словесную игру ПАС!' \
-                          'Скажи своё имя для сохранения результатов:'
-
+            res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
+        return
+            
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
         res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n' \
                                   'У меня есть 3 режима: паронимы, синонимы, антонимы.'
 
+
         res['user_state_update'] = {
             'nick': sessionStorage[user_id]['nick']
         }
         return
     if 'паронимы' in req['request']['original_utterance'].lower():
-        sessionStorage[user_id]['mode'] = 'паронимы'
+        sessionStorage[user_id]['mode'] = 'пароним'
         paron = copy.deepcopy(par)
         random.shuffle(paron)
         sessionStorage[user_id]['data'] = paron
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
     if 'антонимы' in req['request']['original_utterance'].lower():
-        sessionStorage[user_id]['mode'] = 'антонимы'
+        sessionStorage[user_id]['mode'] = 'антоним'
         antonym = copy.deepcopy(ant)
         random.shuffle(antonym)
         sessionStorage[user_id]['data'] = antonym
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
     if 'синонимы' in req['request']['original_utterance'].lower():
-        sessionStorage[user_id]['mode'] = 'синонимы'
+        sessionStorage[user_id]['mode'] = 'синоним'
         sinonym = copy.deepcopy(sin)
         random.shuffle(sinonym)
         sessionStorage[user_id]['data'] = sinonym
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
-    if 'помощь' in req['request']['original_utterance'].lower():
-        res['response']['text'] = 'У меня есть 3 режима: паронимы, антонимы и синонимы. В каждом режиме я буду говорить тебе слово, а тебе нужно придумать слово из 3 этих категорий.'
+
     if sessionStorage[user_id]['mode'] in ['антоним', 'пароним', 'синоним']:
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
@@ -274,7 +275,7 @@ def station_dialog(req, res):
                 sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['id'] += 1
     else:
-        res['response']['text'] = 'Прости, не понимаю тебя. Скажи помощь, и я расскажу тебе правила игры.'
+        res['response']['text'] = 'Прости, не понимаю тебя. Выбери режим: паронимы, антонимы или синонимы.'
     return
     
 
