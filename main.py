@@ -108,18 +108,18 @@ def handle_dialog(req, res):
             sessionStorage[user_id]['sin'] = req['state']['user']['sin']
             sessionStorage[user_id]['par'] = req['state']['user']['par']
 
-            res['response']['tts'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
+            res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
                 f'Твои очки: антонимы: {sessionStorage[user_id]["ant"]}, синонимы: {sessionStorage[user_id]["sin"]} ' \
                 f'паронимы: {sessionStorage[user_id]["par"]}'
             res['response']['card'] = modes_list(f"Давно не виделись, {sessionStorage[user_id]['nick']}!")
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
-        
+        return
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
         res['response']['card'] = modes_list(f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n')
-        res['response']['tts'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n. ' \
+        res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n. ' \
             f'У меня есть несколько режимов, просто нажми на кнопку или скажи, чтобы выбрать их.'
 
         res['user_state_update'] = {
@@ -214,7 +214,7 @@ def station_dialog(req, res):
             res['response'][
                 'text'] = 'Привет! Добро пожаловать в словесную игру ПАС!' \
                           'Скажи своё имя для сохранения результатов:'
-                          
+
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
