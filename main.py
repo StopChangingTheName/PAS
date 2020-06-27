@@ -130,6 +130,7 @@ def handle_dialog(req, res):
         res["response"]["card"] = modes_list("Меню")
         res["response"]["text"] = "Выбери режим из предложенных!"
         sessionStorage[user_id]['mode'] = ''
+        return
 
     if 'антонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'антоним'
