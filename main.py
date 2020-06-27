@@ -11,6 +11,8 @@ with open('Data.json', encoding='utf8') as f:
     ant = json.loads(f.read())['antonimy']  # массив из словарей дат
 with open('Data.json', encoding='utf8') as f:
     par = json.loads(f.read())['paron']  # массив из словарей дат
+with open('Data.json', encoding='utf8') as f:
+    sin = json.loads(f.read())['sinonimy']  # массив из словарей дат
 
 @app.route('/post', methods=['POST'])
 def main():
