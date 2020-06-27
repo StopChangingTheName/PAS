@@ -1,12 +1,6 @@
-{
-  "question": "",
-  "answer": ""
-},
-{
-  "question": "АНТОНИМЫ",
-  "answer": ""
-},
-{
+"antonimy":
+[  
+  {
     "question": "машина",
     "answer": "человек"
 },
@@ -105,14 +99,30 @@
 {
   "question": "свет",
   "answer": "тьма"
-},
-{
+}
+]
+
+"paron":
+[
+  {
   "question": "ПАРОНИМЫ",
   "answer": ""
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "абонемент",
+  "answer": "абонент"
+},
+{
+  "question": "абстрактность",
+  "answer": "абстракция"
+},
+{
+  "question": "авантюрин",
+  "answer": "авантюрист"
+},
+{
+  "question": "автобиографический",
+  "answer": "автобиографичный"
 },
 {
   "question": "",
@@ -146,19 +156,4 @@
   "question": "",
   "answer": ""
 },
-{
-  "question": "",
-  "answer": ""
-},
-{
-  "question": "",
-  "answer": ""
-},
-{
-  "question": "",
-  "answer": ""
-},
-{
-  "question": "",
-  "answer": ""
-},
+]
