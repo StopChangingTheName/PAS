@@ -1,107 +1,106 @@
-"antonimy":
-[  
-  {
-    "question": "машина",
-    "answer": "человек"
-},
 {
-  "question": "сердце",
-  "answer": "разум"
-},
-{
-  "question": "рукопись",
-  "answer": "черновик"
-},
-{
-  "question": "труд",
-  "answer": "отдых"
-},
-{
-  "question": "команда",
-  "answer": "индивидуум"
-},
-{
-  "question": "замок",
-  "answer": "лачуга"
-},
-{
-  "question": "великан",
-  "answer": "мелочь"
-},
-{
-  "question": "плач",
-  "answer": "смех"
-},
-{
-  "question": "правка",
-  "answer": "порча"
-},
-{
-  "question": "огонь",
-  "answer": "вода"
-},
-{
-  "question": "восход",
-  "answer": "закат"
-},
-{
-  "question": "добро",
-  "answer": "зло"
-},
-{
-  "question": "утро",
-  "answer": "вечер"
-},
-{
-  "question": "мир",
-  "answer": "война"
-},
-{
-  "question": "труженик",
-  "answer": "бездельник"
-},
-{
-  "question": "лето",
-  "answer": "зима"
-},
-{
-  "question": "друг",
-  "answer": "враг"
-},
-{
-  "question": "грусть",
-  "answer": "радость"
-},
-{
-  "question": "болтун",
-  "answer": "молчун"
-},
-{
-  "question": "храбрость",
-  "answer": "трусость"
-},
-{
-  "question": "молчать",
-  "answer": "говорить"
-},
-{
-  "question": "бежать",
-  "answer": "стоять"
-},
-{
-  "question": "радоваться",
-  "answer": "огорчаться"
-},
-{
-  "question": "стемнело",
-  "answer": "рассвело"
-},
-{
-  "question": "свет",
-  "answer": "тьма"
-}
-]
-
+  "antonimy": [
+    {
+      "question": "машина",
+      "answer": "человек"
+    },
+    {
+      "question": "сердце",
+      "answer": "разум"
+    },
+    {
+      "question": "рукопись",
+      "answer": "черновик"
+    },
+    {
+      "question": "труд",
+      "answer": "отдых"
+    },
+    {
+      "question": "команда",
+      "answer": "индивидуум"
+    },
+    {
+      "question": "замок",
+      "answer": "лачуга"
+    },
+    {
+      "question": "великан",
+      "answer": "мелочь"
+    },
+    {
+      "question": "плач",
+      "answer": "смех"
+    },
+    {
+      "question": "правка",
+      "answer": "порча"
+    },
+    {
+      "question": "огонь",
+      "answer": "вода"
+    },
+    {
+      "question": "восход",
+      "answer": "закат"
+    },
+    {
+      "question": "добро",
+      "answer": "зло"
+    },
+    {
+      "question": "утро",
+      "answer": "вечер"
+    },
+    {
+      "question": "мир",
+      "answer": "война"
+    },
+    {
+      "question": "труженик",
+      "answer": "бездельник"
+    },
+    {
+      "question": "лето",
+      "answer": "зима"
+    },
+    {
+      "question": "друг",
+      "answer": "враг"
+    },
+    {
+      "question": "грусть",
+      "answer": "радость"
+    },
+    {
+      "question": "болтун",
+      "answer": "молчун"
+    },
+    {
+      "question": "храбрость",
+      "answer": "трусость"
+    },
+    {
+      "question": "молчать",
+      "answer": "говорить"
+    },
+    {
+      "question": "бежать",
+      "answer": "стоять"
+    },
+    {
+      "question": "радоваться",
+      "answer": "огорчаться"
+    },
+    {
+      "question": "стемнело",
+      "answer": "рассвело"
+    },
+    {
+      "question": "свет",
+      "answer": "тьма"
+    }
+  ],
 "paron":
 [
 {
@@ -224,4 +223,5 @@
   "question": "двигатель",
   "answer": "движитель"
 }
-]
+  ]
+}
