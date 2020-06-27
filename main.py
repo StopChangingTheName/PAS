@@ -230,21 +230,21 @@ def station_dialog(req, res):
         }
         return
     if 'паронимы' in req['request']['original_utterance'].lower():
-        sessionStorage[user_id]['mode'] = 'паронимы'
+        sessionStorage[user_id]['mode'] = 'пароним'
         paron = copy.deepcopy(par)
         random.shuffle(paron)
         sessionStorage[user_id]['data'] = paron
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
     if 'антонимы' in req['request']['original_utterance'].lower():
-        sessionStorage[user_id]['mode'] = 'антонимы'
+        sessionStorage[user_id]['mode'] = 'антоним'
         antonym = copy.deepcopy(ant)
         random.shuffle(antonym)
         sessionStorage[user_id]['data'] = antonym
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
     if 'синонимы' in req['request']['original_utterance'].lower():
-        sessionStorage[user_id]['mode'] = 'синонимы'
+        sessionStorage[user_id]['mode'] = 'синоним'
         sinonym = copy.deepcopy(sin)
         random.shuffle(sinonym)
         sessionStorage[user_id]['data'] = sinonym
