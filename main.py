@@ -111,6 +111,9 @@ def handle_dialog(req, res):
             'nick': sessionStorage[user_id]['nick']
         }
         return
+    if 'меню' in req['request']['original_utterance'].lower():
+        res["response"]["card"] = modes_list("Меню")
+        res["response"]["tts"] = "Выбери режим из предложенных!"
 
     if 'антонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'антоним'
@@ -120,7 +123,23 @@ def handle_dialog(req, res):
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
 
-    if sessionStorage[user_id]['mode'] == 'антоним':
+    if 'паронимы' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'пароним'
+        paronym = copy.deepcopy(par)
+        random.shuffle(par)
+        sessionStorage[user_id]['data'] = paronym
+        sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['last'] = False
+
+    if 'синонимы' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'синоним'
+        sinonym = copy.deepcopy(sin)
+        random.shuffle(sin)
+        sessionStorage[user_id]['data'] = sinonym
+        sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['last'] = False
+
+    if sessionStorage[user_id]['mode'] in ['антоним', 'пароним', 'синоним']:
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
             res['response']['text'] = f'Подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
@@ -132,22 +151,27 @@ def handle_dialog(req, res):
             else:
                 res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
 
-        res['response']['text'] += f'Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
-        if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
-            random.shuffle(sessionStorage[user_id]['data'])
-            sessionStorage[user_id]['id'] = 0
+            res['response']['text'] += f' Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+            if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
+                random.shuffle(sessionStorage[user_id]['data'])
+                sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['id'] += 1
-
+        res['response']['buttons'] = [
+            {'title': suggest, 'hide': True}
+            for suggest in sessionStorage[user_id]['slicedsuggests']
+        ]
+    else:
+        res["response"]["card"] = modes_list("Меню")
+        res["response"]["tts"] = "Извини, я тебя не понимаю. Выбери режим из предложенных!"
     return
-
 
 
 def station_dialog(req, res):
     user_id = req['session']['user_id']
     if res['response']['end_session'] is True:
-        write_in_base(user_id)
+        #write_in_base(user_id)
     if req['session']['new']:
-        config(user_id)
+        #config(user_id)
         try:
             res['response']['text'] = 'Привет еще раз!'
             sessionStorage[user_id]['nick'] = req['state']['user']['nick']
