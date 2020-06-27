@@ -104,10 +104,6 @@
 
 "paron":
 [
-  {
-  "question": "ПАРОНИМЫ",
-  "answer": ""
-},
 {
   "question": "абонемент",
   "answer": "абонент"
@@ -125,35 +121,107 @@
   "answer": "автобиографичный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "автоматический",
+  "answer": "автоматичный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "адресант",
+  "answer": "адресат"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "академический",
+  "answer": "академичный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "аккордный",
+  "answer": "аккордовый"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "бабий",
+  "answer": "бабский"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "барский",
+  "answer": "барственный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "бедный",
+  "answer": "бедственный"
 },
 {
-  "question": "",
-  "answer": ""
+  "question": "безделица",
+  "answer": "бездельница"
 },
+{
+  "question": "безликий",
+  "answer": "безличный"
+},
+{
+  "question": "безответный",
+  "answer": "безответственный"
+},
+{
+  "question": "безыскусный",
+  "answer": "безыскусственный"
+},
+{
+  "question": "белеть",
+  "answer": "белить"
+},
+{
+  "question": "вакансия",
+  "answer": "вакация"
+},
+{
+  "question": "вакхальный",
+  "answer": "вакханальный"
+},
+{
+  "question": "варкий",
+  "answer": "варочный"
+},
+{
+  "question": "вассальный",
+  "answer": "вассальский"
+},
+{
+  "question": "вафельница",
+  "answer": "вафельщица"
+},
+{
+  "question": "вбежать",
+  "answer": "взбежать"
+},
+{
+  "question": "вбить",
+  "answer": "взбить"
+},
+{
+  "question": "ввалить",
+  "answer": "взвалить"
+},
+{
+  "question": "гагарий",
+  "answer": "гагаровый"
+},
+{
+  "question": "гадальный",
+  "answer": "гадательный"
+},
+{
+  "question": "гарантийный",
+  "answer": "гарантированный"
+},
+{
+  "question": "дарёный",
+  "answer": "даровой"
+},
+{
+  "question": "дармоедный",
+  "answer": "дармоедский"
+},
+{
+  "question": "двигатель",
+  "answer": "движитель"
+}
 ]
