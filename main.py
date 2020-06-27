@@ -8,7 +8,9 @@ from threading import Thread
 sessionStorage = {}
 app = Flask('')
 with open('Data.json', encoding='utf8') as f:
-    ant = json.loads(f.read())['antonimy']  # массив из словарей дат
+    ant = json.loads(f.read())['antonimy']  # антонимы
+with open('Data.json', encoding='utf8') as f:
+    paron = json.loads(f.read())['paron']  # паронимы
 
 @app.route('/post', methods=['POST'])
 def main():
@@ -116,6 +118,14 @@ def handle_dialog(req, res):
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
 
+    if 'паронимы' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'пароним'
+        paronym = copy.deepcopy(paron)
+        random.shuffle(paron)
+        sessionStorage[user_id]['data'] = paronym
+        sessionStorage[user_id]['id'] = 0
+        sessionStorage[user_id]['last'] = False
+
     if sessionStorage[user_id]['mode'] == 'антоним':
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
@@ -128,11 +138,15 @@ def handle_dialog(req, res):
             else:
                 res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
 
-        res['response']['text'] += f'Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
-        if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
-            random.shuffle(sessionStorage[user_id]['data'])
-            sessionStorage[user_id]['id'] = 0
+            res['response']['text'] += f' Следующий вопрос: подбери {sessionStorage[user_id]["mode"]} к слову {word}!'
+            if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
+                random.shuffle(sessionStorage[user_id]['data'])
+                sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['id'] += 1
+        res['response']['buttons'] = [
+            {'title': suggest, 'hide': True}
+            for suggest in sessionStorage[user_id]['slicedsuggests']
+        ]
 
     return
 
