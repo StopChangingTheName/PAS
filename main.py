@@ -192,6 +192,7 @@ def station_dialog(req, res):
     user_id = req['session']['user_id']
     if res['response']['end_session'] is True:
         #write_in_base(user_id)
+        pass
     if req['session']['new']:
         sessionStorage[user_id] = {
             'nick': None,
@@ -306,8 +307,8 @@ def keep_alive():
 
 
 if __name__ == '__main__':
-    from flask_ngrok import run_with_ngrok
-    run_with_ngrok(app)
-    app.run()
-    #keep_alive()
+    #from flask_ngrok import run_with_ngrok
+    #run_with_ngrok(app)
+    #app.run()
+    keep_alive()
     # app.run()
