@@ -108,10 +108,49 @@ def handle_dialog(req, res):
         return
 
 
+def write_in_base(user_id):
+    pass
 
+def config(user_id):
+    sessionStorage[user_id] = {
+        'nick': None,
+        'word_id': 0,
+        'mode': None,
+        ''  
+    }
 
 def station_dialog(req, res):
-    pass
+    user_id = req['session']['user_id']
+    if res['response']['end_session'] is True:
+        write_in_base(user_id)
+    if req['session']['new']:
+        config(user_id)
+        try:
+            res['response']['text'] = 'Привет еще раз!'
+            sessionStorage[user_id]['nick'] = req['state']['user']['nick']
+
+        except Exception:
+            res['response'][
+                'text'] = 'Привет! Добро пожаловать в ПАС!' \
+                          'Скажи своё имя для сохранения результатов:'
+        return
+    if sessionStorage[user_id]['nick'] is None:
+        tag = str(random.randint(0, 10001))
+        sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
+        res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n' \
+                                  'У меня есть 3 режима: паронимы, синонимы, антонимы.'
+
+        res['user_state_update'] = {
+            'nick': sessionStorage[user_id]['nick']
+        }
+        return
+    if 'паронимы' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'паронимы'
+    if 'антонимы' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'антонимы'
+    if 'синонимы' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'синонимы'
+    
 
 
 def run():
