@@ -184,6 +184,18 @@ def handle_dialog(req, res):
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
 
+    if 'мультиплеер' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'мультиплеер'
+        sessionStorage[user_id]['names'] = []
+        antonym = copy.deepcopy(ant)
+        paronym = copy.deepcopy(par)
+        sinonym = copy.deepcopy(sin)
+        data = antonym + paronym + sinonym
+        random.shuffle(data)
+        sessionStorage[user_id]['data'] = data[:20]
+        res['response']['text'] = 'Назови имена тех, кто будет играть, например, Аня и Петя'
+        return
+
     if sessionStorage[user_id]['mode'] in ['антоним', 'пароним', 'синоним']:
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
@@ -214,6 +226,63 @@ def handle_dialog(req, res):
             {'title': suggest, 'hide': True}
             for suggest in sessionStorage[user_id]['slicedsuggests']
         ]
+    elif sessionStorage[user_id]['mode'] == 'мультиплеер':
+        if not sessionStorage[user_id]['names']:
+            sessionStorage[user_id]['names'] = req['request']['original_utterance'].split() # нужна def с поиском интентов
+            print(sessionStorage[user_id]['names'])
+            res['response']['text'] = 'Я задам 10 вопросов каждому. Поехали'
+            sessionStorage[user_id]['isPlaying'] = sessionStorage[user_id]['names'][0]
+            sessionStorage[user_id]['multCount'] = {
+                sessionStorage[user_id]['names'][0]: 0,
+                sessionStorage[user_id]['names'][1]: 0
+            }
+            sessionStorage[user_id]['multID'] = 0
+        else:
+            if sessionStorage[user_id]['multID'] == 0:
+                res['response']['text'] = f"Играет {sessionStorage[user_id]['isPlaying']}! " \
+                    f"{sessionStorage[user_id]['data'][sessionStorage[user_id]['multID']]['question']}."
+            else:
+                if sessionStorage[user_id]['multID'] == 4: # 10 + 10 + 1
+                    # ПРОВЕРКА
+                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
+                    if answer == req['request']['original_utterance'].lower():
+                        toGiveCount = sessionStorage[user_id]['names'][0] \
+                            if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
+                        sessionStorage[user_id]['names'][1]
+                        sessionStorage[user_id]['multCount'][toGiveCount] += 1
+                        res['response']['text'] = 'Верно! '
+                    else:
+                        res['response']['text'] = f"Ошибка, правильный ответ: {answer}! "
+                    # ПРОВЕРКА
+                    name1 = sessionStorage[user_id]['names'][0]
+                    name2 = sessionStorage[user_id]['names'][1]
+                    if sessionStorage[user_id]['multCount'][name1] == sessionStorage[user_id]['multCount'][name2]:
+                        res['response']['text'] += f"В этой битве победила ничья! " \
+                            f"Оба игрока набрали по {sessionStorage[user_id]['multCount'][name1]} баллов." # pymorphy2!
+                    elif sessionStorage[user_id]['multCount'][name1] > sessionStorage[user_id]['multCount'][name2]:
+                        res['response']['text'] += f"Победил игрок {name1} со счетом " \
+                            f"{sessionStorage[user_id]['multCount'][name1]}:{sessionStorage[user_id]['multCount'][name2]}"
+                    else:
+                        res['response']['text'] += f"Победил игрок {name2} со счетом " \
+                            f"{sessionStorage[user_id]['multCount'][name2]}:{sessionStorage[user_id]['multCount'][name2]}"
+                    return
+                else:
+                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
+                    if answer == req['request']['original_utterance'].lower():
+                        toGiveCount = sessionStorage[user_id]['names'][0] \
+                    if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
+                        sessionStorage[user_id]['multCount'][toGiveCount] += 1
+                        res['response']['text'] = 'Верно! '
+                    else:
+                        res['response']['text'] = f"Ошибка, правильный ответ: {answer}! "
+                    res['response']['text'] += f"Играет {sessionStorage[user_id]['isPlaying']}! " \
+                        f"{sessionStorage[user_id]['data'][sessionStorage[user_id]['multID']]['question']}."
+            sessionStorage[user_id]['isPlaying'] = sessionStorage[user_id]['names'][0] \
+                    if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
+            sessionStorage[user_id]['multID'] += 1
+        print(sessionStorage[user_id]['multCount'])
+
+
     else:
         res["response"]["card"] = modes_list("Меню")
         res["response"]["tts"] = "Извини, я тебя не понимаю. Выбери режим из предложенных!"
@@ -251,8 +320,6 @@ def station_dialog(req, res):
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
         res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n' \
                                   'У меня есть 3 режима: паронимы, синонимы, антонимы.'
-
-
         res['user_state_update'] = {
             'nick': sessionStorage[user_id]['nick']
         }
