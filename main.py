@@ -56,6 +56,7 @@ def modes_list(phrase):
         },
         "items": [
             {
+                "image_id": "1030494/3f3a4f2e06cee0e8a04c",
                 "title": "Антонимы",
                 "description": "Алиса тебе говорит слово, а ты должен подобрать антоним к нему!",
                 "button": {
@@ -63,6 +64,7 @@ def modes_list(phrase):
                 }
             },
             {
+                "image_id": "1533899/9abcc0382d7feea2d610",
                 "title": "Синонимы",
                 "description": "Подбери к слову Алисы верный синонимы!",
                 "button": {
@@ -70,6 +72,7 @@ def modes_list(phrase):
                 }
             },
             {
+                "image_id": "1533899/0de49a4c564831a332eb",
                 "title": "Паронимы",
                 "description": "Подбери к слову Алисы верный пароним!",
                 "button": {
@@ -77,6 +80,7 @@ def modes_list(phrase):
                 }
             },
             {
+                "image_id": "997614/6856a265b94342ede936",
                 "title": "Мультиплеер",
                 "description": "Нечем заняться с другом? Сыграй с ним в наш навык! Счет до 10 очков.",
                 "button": {
@@ -84,6 +88,7 @@ def modes_list(phrase):
                 }
             },
             {
+                "image_id": "213044/d5e7802572e77acbf28e",
                 "title": "Рейтинг",
                 "description": "Узнай, на каком ты месте в нашем топе!",
                 "button": {
