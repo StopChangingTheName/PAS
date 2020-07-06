@@ -398,7 +398,9 @@ def station_dialog(req, res):
 
             res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
                 f'Твои очки: антонимы: {sessionStorage[user_id]["ant"]}, синонимы: {sessionStorage[user_id]["sin"]} ' \
-                f'паронимы: {sessionStorage[user_id]["par"]}'
+                f'паронимы: {sessionStorage[user_id]["par"]}. У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
+                                  'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
+                                  'паронимы и синонимы'
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
         return
@@ -407,11 +409,31 @@ def station_dialog(req, res):
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
         res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n' \
-                                  'У меня есть 4 режима: паронимы, синонимы, антонимы и мультиплеер на двоих, ' \
-                                  'в котором ты сможешь сыграть со своим другом!'
+                                  'У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
+                                  'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
+                                  'паронимы и синонимы'
         res['user_state_update'] = {
             'nick': sessionStorage[user_id]['nick']
         }
+        return
+
+    if 'игры на одного' in req['request']['original_utterance'].lower():
+        res["response"]["text"] = "В какой режим сыграем: антонимы, паронимы или синонимы?"
+        sessionStorage[user_id]['mode'] = ''
+        return
+    if 'терминология' in req['request']['original_utterance'].lower():
+        res["response"]["text"] = 'Немного терминологии.\n' \
+                                  'Паронимы — это слова, сходные по звучанию, но различающиеся лексическим значением, например, адресат — адресант.\n' \
+                                  'Антонимы — это слова, имеющие прямо противоположные лексические значения, например, огонь — вода.\n' \
+                                  'Синонимы — это слова, разные по написанию, но имеющие схожее значение, например, ветер — бриз.\n' \
+                                  'Возвращайся в меню и выбирай режеим для игры!'
+        sessionStorage[user_id]['mode'] = ''
+        return
+    if 'меню' in req['request']['original_utterance'].lower():
+        res["response"]["text"] = 'У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
+                                  'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
+                                  'паронимы и синонимы'
+        sessionStorage[user_id]['mode'] = ''
         return
     if 'паронимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'пароним'
