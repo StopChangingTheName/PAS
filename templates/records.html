@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-danger" align="center">Таблица лидеров</h1>
+<div class="col-md6 border rounded">
+    <table class="table">
+        <tr class="white">
+            <td class="table-active">№</td>
+            <td class="table-active">Ник</td>
+            <td class="table-active">Баллы за паронимы</td>
+            <td class="table-active">Баллы за антонимы</td>
+            <td class="table-active">Баллы за синонимы</td>
+            <td class="table-active">Сумма баллов</td>
+        </tr>
+        {% for p in persons%}
+        <tr class="white">
+            <td class="table-active">{{loop.index}}</td>
+            <td class="table-active">{{p[1]}}</td>
+            <td class="table-active">{{p[2]}}</td>
+            <td class="table-active">{{p[3]}}</td>
+            <td class="table-active">{{p[4]}}</td>
+            <td class="table-active">{{p[5]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

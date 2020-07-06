@@ -15,6 +15,7 @@ with open('Data.json', encoding='utf8') as f:
 with open('Data.json', encoding='utf8') as f:
     sin = json.loads(f.read())['sinonimy']  # массив из словарей дат
 
+
 @app.route('/post', methods=['POST'])
 def main():
     response = {
@@ -29,6 +30,22 @@ def main():
     else:
         station_dialog(request.json, response)
     return json.dumps(response)
+
+
+@app.route('/records')
+def records():
+    con = psycopg2.connect(user="indmfojfvoiiem",
+                           password="facdfb9fe6e90a07401ae02ef4e2297fa93c2bf6d205648e5d7e062c0c8da8bb",
+                           host="ec2-54-247-78-30.eu-west-1.compute.amazonaws.com",
+                           port="5432",
+                           database="dd2pdbo5s56kui")
+    cur = con.cursor()
+    cur.execute("SELECT * FROM u;")
+    persons = cur.fetchall()
+    con.commit()
+    con.close()
+    persons = sorted(persons, key=lambda x: -x[-1])
+    return render_template('records.html', title='Рекорды', persons=persons)
 
 
 def modes_list(phrase):
@@ -70,7 +87,7 @@ def modes_list(phrase):
                 "title": "Рейтинг",
                 "description": "Узнай, на каком ты месте в нашем топе!",
                 "button": {
-                    "text": "Рейтинг"
+                    "url": "https://PAS--t1logy.repl.co/records"
                 }
             }
         ]
@@ -83,6 +100,7 @@ def write_in_state(user_id):
         'sin': sessionStorage[user_id]['sin'],
         'ant': sessionStorage[user_id]['ant']
     }
+
 def write_in_base(user_id):
     con = psycopg2.connect(user="indmfojfvoiiem",
                            password="facdfb9fe6e90a07401ae02ef4e2297fa93c2bf6d205648e5d7e062c0c8da8bb",
@@ -224,7 +242,7 @@ def handle_dialog(req, res):
                 res['user_state_update'] = write_in_state(user_id)
                 write_in_base(user_id)
             else:
-                res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
+                res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}."
 
             res['response']['text'] += f' Следующий вопрос: {word}!'
             if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
@@ -238,15 +256,15 @@ def handle_dialog(req, res):
         ]
     elif sessionStorage[user_id]['mode'] == 'мультиплеер':
         if not sessionStorage[user_id]['names']:
-            entity_length = get_first_name(req)
-            if entity_length <= 1:
+            names = get_first_name(req)
+            if len(names) <= 1:
                 res['response']['text'] = 'Маловато игроков. Вас должно быть двое! Назови два имени, пожалуйста!'
                 return
-            elif entity_length >= 3:
+            elif len(names) >= 3:
                 res['response']['text'] = 'Многовато игроков. Вас должно быть двое! Назови два имени, пожалуйста!'
                 return
             else:
-                sessionStorage[user_id]['names'] = req['request']['original_utterance'].split() # нужна def с поиском интентов
+                sessionStorage[user_id]['names'] = names
                 print(sessionStorage[user_id]['names'])
                 res['response']['text'] = 'Я задам каждому по десять вопросов!\n' \
                                           'Немного терминологии.\n' \
@@ -268,7 +286,7 @@ def handle_dialog(req, res):
                 if sessionStorage[user_id]['multID'] == 20: # 10 + 10 + 1
                     # ПРОВЕРКА
                     answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
-                    if answer == req['request']['original_utterance'].lower():
+                    if answer in req['request']['original_utterance'].lower():
                         toGiveCount = sessionStorage[user_id]['names'][0] \
                             if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
                         sessionStorage[user_id]['names'][1]
@@ -280,7 +298,7 @@ def handle_dialog(req, res):
                     name1 = sessionStorage[user_id]['names'][0]
                     name2 = sessionStorage[user_id]['names'][1]
                     if sessionStorage[user_id]['multCount'][name1] == sessionStorage[user_id]['multCount'][name2]:
-                        res['response']['text'] += f"В этой битве победила ничья! " \
+                        res['response']['text'] += f"Ничья! " \
                             f"Оба игрока набрали по {sessionStorage[user_id]['multCount'][name1]} баллов." # pymorphy2!
                     elif sessionStorage[user_id]['multCount'][name1] > sessionStorage[user_id]['multCount'][name2]:
                         res['response']['text'] += f"Победил игрок {name1} со счетом " \
@@ -291,7 +309,7 @@ def handle_dialog(req, res):
                     return
                 else:
                     answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
-                    if answer == req['request']['original_utterance'].lower():
+                    if answer in req['request']['original_utterance'].lower():
                         toGiveCount = sessionStorage[user_id]['names'][0] \
                     if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
                         sessionStorage[user_id]['multCount'][toGiveCount] += 1
@@ -393,15 +411,15 @@ def station_dialog(req, res):
         sessionStorage[user_id]['id'] += 1
     elif sessionStorage[user_id]['mode'] == 'мультиплеер':
         if not sessionStorage[user_id]['names']:
-            entity_length = get_first_name(req)
-            if entity_length <= 1:
+            names = get_first_name(req)
+            if len(names) <= 1:
                 res['response']['text'] = 'Маловато игроков. Вас должно быть двое! Назови два имени, пожалуйста!'
                 return
-            elif entity_length >= 3:
+            elif len(names) >= 3:
                 res['response']['text'] = 'Многовато игроков. Вас должно быть двое! Назови два имени, пожалуйста!'
                 return
             else:
-                sessionStorage[user_id]['names'] = req['request']['original_utterance'].split() # нужна def с поиском интентов
+                sessionStorage[user_id]['names'] = names
                 print(sessionStorage[user_id]['names'])
                 res['response']['text'] = 'Я задам каждому по десять вопросов! Играть будем по очереди!\n' \
                                           'Немного терминологии для повторения.\n' \
@@ -423,7 +441,7 @@ def station_dialog(req, res):
                 if sessionStorage[user_id]['multID'] == 20: # 10 + 10 + 1
                     # ПРОВЕРКА
                     answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
-                    if answer == req['request']['original_utterance'].lower():
+                    if answer in req['request']['original_utterance'].lower():
                         toGiveCount = sessionStorage[user_id]['names'][0] \
                             if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
                         sessionStorage[user_id]['names'][1]
@@ -435,7 +453,7 @@ def station_dialog(req, res):
                     name1 = sessionStorage[user_id]['names'][0]
                     name2 = sessionStorage[user_id]['names'][1]
                     if sessionStorage[user_id]['multCount'][name1] == sessionStorage[user_id]['multCount'][name2]:
-                        res['response']['text'] += f"В этой битве победила ничья! " \
+                        res['response']['text'] += f"Ничья! " \
                             f"Оба игрока набрали по {sessionStorage[user_id]['multCount'][name1]} баллов." # pymorphy2!
                     elif sessionStorage[user_id]['multCount'][name1] > sessionStorage[user_id]['multCount'][name2]:
                         res['response']['text'] += f"Победил игрок {name1} со счетом " \
@@ -446,7 +464,7 @@ def station_dialog(req, res):
                     return
                 else:
                     answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
-                    if answer == req['request']['original_utterance'].lower():
+                    if answer in req['request']['original_utterance'].lower():
                         toGiveCount = sessionStorage[user_id]['names'][0] \
                     if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
                         sessionStorage[user_id]['multCount'][toGiveCount] += 1
@@ -463,12 +481,12 @@ def station_dialog(req, res):
     return
     
 
-def get_first_name(req) -> int:
+def get_first_name(req) -> list:
     names = []
     for entity in req['request']['nlu']['entities']:
         if entity['type'] == 'YANDEX.FIO':
             names.append(entity['value'].get('first_name', None))
-    return len(names)
+    return names
 
 
 def run():
