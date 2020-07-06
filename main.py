@@ -230,19 +230,21 @@ def handle_dialog(req, res):
             res['response']['text'] = f'{word}!'
             sessionStorage[user_id]['last'] = True
         else:
-            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer']
-            if answer == req['request']['original_utterance'].lower():
-                res['response']['text'] = "Верно!"
-                if sessionStorage[user_id]['mode'] == 'антоним':
-                    sessionStorage[user_id]['ant'] += 1
-                elif sessionStorage[user_id]['mode'] == 'синоним':
-                    sessionStorage[user_id]['sin'] += 1
-                elif sessionStorage[user_id]['mode'] == 'пароним':
-                    sessionStorage[user_id]['par'] += 1
-                res['user_state_update'] = write_in_state(user_id)
-                write_in_base(user_id)
+            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer'].split('/')
+            for ans in answer:
+                if ans in req['request']['original_utterance'].lower():
+                    res['response']['text'] = "Верно!"
+                    if sessionStorage[user_id]['mode'] == 'антоним':
+                        sessionStorage[user_id]['ant'] += 1
+                    elif sessionStorage[user_id]['mode'] == 'синоним':
+                        sessionStorage[user_id]['sin'] += 1
+                    elif sessionStorage[user_id]['mode'] == 'пароним':
+                        sessionStorage[user_id]['par'] += 1
+                    res['user_state_update'] = write_in_state(user_id)
+                    write_in_base(user_id)
+                    break
             else:
-                res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}."
+                res['response']['text'] = f"Ты ошибся, правильный ответ: {random.choice(answer)}."
 
             res['response']['text'] += f' Следующий вопрос: {word}!'
             if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
@@ -285,15 +287,17 @@ def handle_dialog(req, res):
             else:
                 if sessionStorage[user_id]['multID'] == 20: # 10 + 10 + 1
                     # ПРОВЕРКА
-                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
-                    if answer in req['request']['original_utterance'].lower():
-                        toGiveCount = sessionStorage[user_id]['names'][0] \
-                            if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
-                        sessionStorage[user_id]['names'][1]
-                        sessionStorage[user_id]['multCount'][toGiveCount] += 1
-                        res['response']['text'] = 'Верно! '
+                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer'].split('/')
+                    for ans in answer:
+                        if ans in req['request']['original_utterance'].lower():
+                            toGiveCount = sessionStorage[user_id]['names'][0] \
+                                if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
+                            sessionStorage[user_id]['names'][1]
+                            sessionStorage[user_id]['multCount'][toGiveCount] += 1
+                            res['response']['text'] = 'Верно! '
+                            break
                     else:
-                        res['response']['text'] = f"Ошибка, правильный ответ: {answer}! "
+                        res['response']['text'] = f"Ошибка, правильный ответ: {random.choice(answer)}! "
                     # ПРОВЕРКА
                     name1 = sessionStorage[user_id]['names'][0]
                     name2 = sessionStorage[user_id]['names'][1]
@@ -308,14 +312,17 @@ def handle_dialog(req, res):
                             f"{sessionStorage[user_id]['multCount'][name2]}:{sessionStorage[user_id]['multCount'][name2]}"
                     return
                 else:
-                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
-                    if answer in req['request']['original_utterance'].lower():
-                        toGiveCount = sessionStorage[user_id]['names'][0] \
-                    if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
-                        sessionStorage[user_id]['multCount'][toGiveCount] += 1
-                        res['response']['text'] = 'Верно! '
+                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer'].split('/')
+                    for ans in answer:
+                        if ans in req['request']['original_utterance'].lower():
+                            toGiveCount = sessionStorage[user_id]['names'][0] \
+                                if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
+                                sessionStorage[user_id]['names'][1]
+                            sessionStorage[user_id]['multCount'][toGiveCount] += 1
+                            res['response']['text'] = 'Верно! '
+                            break
                     else:
-                        res['response']['text'] = f"Ошибка, правильный ответ: {answer}! "
+                        res['response']['text'] = f"Ошибка, правильный ответ: {random.choice(answer)}! "
                     res['response']['text'] += f"Играет {sessionStorage[user_id]['isPlaying']}! " \
                         f"{sessionStorage[user_id]['data'][sessionStorage[user_id]['multID']]['question']}."
             sessionStorage[user_id]['isPlaying'] = sessionStorage[user_id]['names'][0] \
@@ -391,18 +398,21 @@ def station_dialog(req, res):
             res['response']['text'] = f'{word}!'
             sessionStorage[user_id]['last'] = True
         else:
-            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer']
-            if answer == req['request']['original_utterance'].lower():
-                res['response']['text'] = "Верно!"
-                if sessionStorage[user_id]['mode'] == 'антоним':
-                    sessionStorage[user_id]['ant'] += 1
-                elif sessionStorage[user_id]['mode'] == 'синоним':
-                    sessionStorage[user_id]['sin'] += 1
-                elif sessionStorage[user_id]['mode'] == 'пароним':
-                    sessionStorage[user_id]['par'] += 1
-                res['user_state_update'] = write_in_state(user_id)
+            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer'].split('/')
+            for ans in answer:
+                if ans in req['request']['original_utterance'].lower():
+                    res['response']['text'] = "Верно!"
+                    if sessionStorage[user_id]['mode'] == 'антоним':
+                        sessionStorage[user_id]['ant'] += 1
+                    elif sessionStorage[user_id]['mode'] == 'синоним':
+                        sessionStorage[user_id]['sin'] += 1
+                    elif sessionStorage[user_id]['mode'] == 'пароним':
+                        sessionStorage[user_id]['par'] += 1
+                    res['user_state_update'] = write_in_state(user_id)
+                    write_in_base(user_id)
+                    break
             else:
-                res['response']['text'] = f"Ты ошибся, правильный ответ: {answer}"
+                res['response']['text'] = f"Ты ошибся, правильный ответ: {random.choice(answer)}."
 
             res['response']['text'] += f' Следующий вопрос: {word}!'
             if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
@@ -440,15 +450,17 @@ def station_dialog(req, res):
             else:
                 if sessionStorage[user_id]['multID'] == 20: # 10 + 10 + 1
                     # ПРОВЕРКА
-                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
-                    if answer in req['request']['original_utterance'].lower():
-                        toGiveCount = sessionStorage[user_id]['names'][0] \
-                            if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
-                        sessionStorage[user_id]['names'][1]
-                        sessionStorage[user_id]['multCount'][toGiveCount] += 1
-                        res['response']['text'] = 'Верно! '
+                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer'].split('/')
+                    for ans in answer:
+                        if ans in req['request']['original_utterance'].lower():
+                            toGiveCount = sessionStorage[user_id]['names'][0] \
+                                if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
+                                sessionStorage[user_id]['names'][1]
+                            sessionStorage[user_id]['multCount'][toGiveCount] += 1
+                            res['response']['text'] = 'Верно! '
+                            break
                     else:
-                        res['response']['text'] = f"Ошибка, правильный ответ: {answer}! "
+                        res['response']['text'] = f"Ошибка, правильный ответ: {random.choice(answer)}! "
                     # ПРОВЕРКА
                     name1 = sessionStorage[user_id]['names'][0]
                     name2 = sessionStorage[user_id]['names'][1]
@@ -463,12 +475,15 @@ def station_dialog(req, res):
                             f"{sessionStorage[user_id]['multCount'][name2]}:{sessionStorage[user_id]['multCount'][name2]}"
                     return
                 else:
-                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer']
-                    if answer in req['request']['original_utterance'].lower():
-                        toGiveCount = sessionStorage[user_id]['names'][0] \
-                    if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
-                        sessionStorage[user_id]['multCount'][toGiveCount] += 1
-                        res['response']['text'] = 'Верно! '
+                    answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer'].split('/')
+                    for ans in answer:
+                        if ans in req['request']['original_utterance'].lower():
+                            toGiveCount = sessionStorage[user_id]['names'][0] \
+                                if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
+                                sessionStorage[user_id]['names'][1]
+                            sessionStorage[user_id]['multCount'][toGiveCount] += 1
+                            res['response']['text'] = 'Верно! '
+                            break
                     else:
                         res['response']['text'] = f"Ошибка, правильный ответ: {answer}! "
                     res['response']['text'] += f"Играет {sessionStorage[user_id]['isPlaying']}! " \
@@ -499,8 +514,8 @@ def keep_alive():
 
 
 if __name__ == '__main__':
-    from flask_ngrok import run_with_ngrok
-    run_with_ngrok(app)
-    app.run()
-    #keep_alive()
+    #from flask_ngrok import run_with_ngrok
+    #run_with_ngrok(app)
+    #app.run()
+    keep_alive()
     # app.run()
