@@ -5,6 +5,7 @@ from flask import Flask, request, render_template
 from threading import Thread
 import psycopg2
 
+
 sessionStorage = {}
 app = Flask('')
 with open('Data.json', encoding='utf8') as f:
@@ -62,7 +63,7 @@ def modes_list(phrase):
                 "title": "Мультиплеер",
                 "description": "Нечем заняться с другом? Сыграй с ним в наш навык! Счет до 10 очков.",
                 "button": {
-                    "text": "Рейтинг"
+                    "text": "Мультиплеер"
                 }
             },
             {
@@ -480,8 +481,8 @@ def keep_alive():
 
 
 if __name__ == '__main__':
-    #from flask_ngrok import run_with_ngrok
-    #run_with_ngrok(app)
-    #app.run()
-    keep_alive()
+    from flask_ngrok import run_with_ngrok
+    run_with_ngrok(app)
+    app.run()
+    #keep_alive()
     # app.run()
