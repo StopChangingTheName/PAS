@@ -25,7 +25,7 @@ def main():
             'end_session': False
         },
     }
-    if 'screen' in request.json['meta']['interfaces']:
+    if 'interfaces' in request.json['meta'] and 'screen' in request.json['meta']['interfaces']:
         handle_dialog(request.json, response)
     else:
         station_dialog(request.json, response)
@@ -456,7 +456,17 @@ def station_dialog(req, res):
         sessionStorage[user_id]['data'] = sinonym
         sessionStorage[user_id]['id'] = 0
         sessionStorage[user_id]['last'] = False
-
+    if 'мультиплеер' in req['request']['original_utterance'].lower():
+        sessionStorage[user_id]['mode'] = 'мультиплеер'
+        sessionStorage[user_id]['names'] = []
+        antonym = copy.deepcopy(ant)
+        paronym = copy.deepcopy(par)
+        sinonym = copy.deepcopy(sin)
+        data = antonym + paronym + sinonym
+        random.shuffle(data)
+        sessionStorage[user_id]['data'] = data[:20]
+        res['response']['text'] = 'Назови имена тех, кто будет играть, например, Аня и Петя'
+        return
     if sessionStorage[user_id]['mode'] in ['антоним', 'пароним', 'синоним']:
         word = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']]['question']
         if not sessionStorage[user_id]['last']:
@@ -496,12 +506,7 @@ def station_dialog(req, res):
             else:
                 sessionStorage[user_id]['names'] = names
                 print(sessionStorage[user_id]['names'])
-                res['response']['text'] = 'Я задам каждому по десять вопросов! Играть будем по очереди!\n' \
-                                          'Немного терминологии для повторения.\n' \
-                                          'Паронимы — это слова, сходные по звучанию, но различающиеся лексическим значением, например, адресат — адресант.\n' \
-                                          'Антонимы — это слова, имеющие прямо противоположные лексические значения, например, огонь — вода.\n' \
-                                          'Синонимы — это слова, разные по написанию, но имеющие схожее значение, например, ветер — бриз.\n' \
-                                          'Скажи "Поехали!" — и мы начинаем!\n'
+                res['response']['text'] = 'Я задам каждому по десять вопросов! Скажи "Поехали!" — и мы начинаем!\n'
                 sessionStorage[user_id]['isPlaying'] = sessionStorage[user_id]['names'][0]
                 sessionStorage[user_id]['multCount'] = {
                     sessionStorage[user_id]['names'][0]: 0,
@@ -557,7 +562,7 @@ def station_dialog(req, res):
                     if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
             sessionStorage[user_id]['multID'] += 1
     else:
-        res['response']['text'] = 'Прости, не понимаю тебя. Выбери режим: паронимы, антонимы, синонимы или мультиплеер.'
+        res['response']['text'] = 'Прости, не понимаю тебя. Выбери режим: игры на одного, мультиплеер или терминология'
     return
     
 
