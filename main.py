@@ -5,7 +5,6 @@ from flask import Flask, request, render_template
 from threading import Thread
 import psycopg2
 
-
 sessionStorage = {}
 app = Flask('')
 with open('Data.json', encoding='utf8') as f:
@@ -91,6 +90,7 @@ def modes_list(phrase):
         ]
     }
 
+
 def for_one_player():
     return {
         "type": "ItemsList",
@@ -124,6 +124,8 @@ def for_one_player():
             }
         ]
     }
+
+
 def write_in_state(user_id):
     return {
         'nick': sessionStorage[user_id]['nick'],
@@ -132,6 +134,7 @@ def write_in_state(user_id):
         'ant': sessionStorage[user_id]['ant']
     }
 
+
 def write_in_base(user_id):
     con = psycopg2.connect(user="indmfojfvoiiem",
                            password="facdfb9fe6e90a07401ae02ef4e2297fa93c2bf6d205648e5d7e062c0c8da8bb",
@@ -139,7 +142,7 @@ def write_in_base(user_id):
                            port="5432",
                            database="dd2pdbo5s56kui")
     cur = con.cursor()
-    par_count =  sessionStorage[user_id]['par']
+    par_count = sessionStorage[user_id]['par']
     sin_count = sessionStorage[user_id]['sin']
     ant_count = sessionStorage[user_id]['ant']
     summa = par_count + sin_count + ant_count
@@ -147,10 +150,12 @@ def write_in_base(user_id):
     if cur.fetchone() is None:
 
         cur.execute(
-            f"INSERT INTO u VALUES (DEFAULT,'{sessionStorage[user_id]['nick']}',{par_count},{ant_count},{sin_count},{summa});")
+            f"INSERT INTO u VALUES (DEFAULT,'{sessionStorage[user_id][
+                'nick']}',{par_count},{ant_count},{sin_count},{summa});")
     else:
         cur.execute(
-            f"UPDATE u SET (paronims, antonims, sinonims, summa) = ({par_count},{ant_count},{sin_count},{summa}) WHERE nick = '{sessionStorage[user_id]['nick']}';")
+            f"UPDATE u SET (paronims, antonims, sinonims, summa) = ({par_count},{ant_count},{sin_count},{summa}) WHERE nick = '{
+            sessionStorage[user_id]['nick']}';")
     con.commit()
     con.close()
 
@@ -195,18 +200,13 @@ def handle_dialog(req, res):
             res['response']['card'] = modes_list(f"Давно не виделись!")
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
-            if 'test_count' in res['user_state_update']:
-                res['user_state_update'] = {"nick": None,
-          "test_count": None,
-          "pic_count": None,
-          "ter_count": None,
-          "cul_count": None}
         return
     print('НУ ЭТО КЛИНИКА РЕБЯТ', sessionStorage[user_id]['nick'])
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
-        res['response']['card'] = modes_list(f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n')
+        res['response']['card'] = modes_list(
+            f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n')
         res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n. ' \
             f'У меня есть несколько режимов, просто нажми на кнопку или скажи, чтобы выбрать их.'
         res['user_state_update'] = {
@@ -218,7 +218,16 @@ def handle_dialog(req, res):
         res["response"]["text"] = "Выбери режим из предложенных!"
         sessionStorage[user_id]['mode'] = ''
         return
-
+    if 'помощь' in req['request']['original_utterance'].lower():
+        res["response"]["card"] = modes_list("Помощь")
+        res["response"]["text"] = "Выбери режим из предложенных!"
+        sessionStorage[user_id]['mode'] = ''
+        return
+    if 'что ты умеешь' in req['request']['original_utterance'].lower():
+        res["response"]["card"] = modes_list("Что я умею:")
+        res["response"]["text"] = "Выбери режим из предложенных!"
+        sessionStorage[user_id]['mode'] = ''
+        return
     if 'игры на одного' in req['request']['original_utterance'].lower():
         res["response"]["card"] = for_one_player()
         res["response"]["text"] = "Выбери режим из предложенных!"
@@ -227,9 +236,9 @@ def handle_dialog(req, res):
 
     if 'терминология' in req['request']['original_utterance'].lower():
         res["response"]["text"] = 'Немного терминологии.\n' \
-                                     'Паронимы — это слова, сходные по звучанию, но различающиеся лексическим значением, например, адресат — адресант.\n' \
-                                    'Антонимы — это слова, имеющие прямо противоположные лексические значения, например, огонь — вода.\n' \
-                                    'Синонимы — это слова, разные по написанию, но имеющие схожее значение, например, ветер — бриз.\n' \
+                                  'Паронимы — это слова, сходные по звучанию, но различающиеся лексическим значением, например, адресат — адресант.\n' \
+                                  'Антонимы — это слова, имеющие прямо противоположные лексические значения, например, огонь — вода.\n' \
+                                  'Синонимы — это слова, разные по написанию, но имеющие схожее значение, например, ветер — бриз.\n' \
                                   'Возвращайся в меню и выбирай режеим для игры!'
         sessionStorage[user_id]['mode'] = ''
         res['response']['buttons'] = [{'title': "Меню", 'hide': True}]
@@ -277,7 +286,7 @@ def handle_dialog(req, res):
             res['response']['text'] = f'{word}!'
             sessionStorage[user_id]['last'] = True
         else:
-            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer'].split('/')
+            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id'] - 1]['answer'].split('/')
             for ans in answer:
                 if ans in req['request']['original_utterance'].lower():
                     res['response']['text'] = "Верно!"
@@ -328,14 +337,14 @@ def handle_dialog(req, res):
                 res['response']['text'] = f"Играет {sessionStorage[user_id]['isPlaying']}! " \
                     f"{sessionStorage[user_id]['data'][sessionStorage[user_id]['multID']]['question']}."
             else:
-                if sessionStorage[user_id]['multID'] == 20: # 10 + 10 + 1
+                if sessionStorage[user_id]['multID'] == 20:  # 10 + 10 + 1
                     # ПРОВЕРКА
                     answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer'].split('/')
                     for ans in answer:
                         if ans in req['request']['original_utterance'].lower():
                             toGiveCount = sessionStorage[user_id]['names'][0] \
                                 if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
-                            sessionStorage[user_id]['names'][1]
+                                sessionStorage[user_id]['names'][1]
                             sessionStorage[user_id]['multCount'][toGiveCount] += 1
                             res['response']['text'] = 'Верно! '
                             break
@@ -346,13 +355,15 @@ def handle_dialog(req, res):
                     name2 = sessionStorage[user_id]['names'][1]
                     if sessionStorage[user_id]['multCount'][name1] == sessionStorage[user_id]['multCount'][name2]:
                         res['response']['text'] += f"Ничья! " \
-                            f"Оба игрока набрали по {sessionStorage[user_id]['multCount'][name1]} баллов." # pymorphy2!
+                            f"Оба игрока набрали по {sessionStorage[user_id]['multCount'][name1]} баллов."  # pymorphy2!
                     elif sessionStorage[user_id]['multCount'][name1] > sessionStorage[user_id]['multCount'][name2]:
                         res['response']['text'] += f"Победил игрок {name1} со счетом " \
-                            f"{sessionStorage[user_id]['multCount'][name1]}:{sessionStorage[user_id]['multCount'][name2]}"
+                            f"{sessionStorage[user_id]['multCount'][name1]}:{sessionStorage[user_id]['multCount'][
+                                name2]}"
                     else:
                         res['response']['text'] += f"Победил игрок {name2} со счетом " \
-                            f"{sessionStorage[user_id]['multCount'][name2]}:{sessionStorage[user_id]['multCount'][name2]}"
+                            f"{sessionStorage[user_id]['multCount'][name2]}:{sessionStorage[user_id]['multCount'][
+                                name2]}"
                     return
                 else:
                     answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer'].split('/')
@@ -369,7 +380,8 @@ def handle_dialog(req, res):
                     res['response']['text'] += f"Играет {sessionStorage[user_id]['isPlaying']}! " \
                         f"{sessionStorage[user_id]['data'][sessionStorage[user_id]['multID']]['question']}."
             sessionStorage[user_id]['isPlaying'] = sessionStorage[user_id]['names'][0] \
-                    if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
+                if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
+            sessionStorage[user_id]['names'][1]
             sessionStorage[user_id]['multID'] += 1
             res['response']['buttons'] = [
                 {'title': suggest, 'hide': True}
@@ -402,20 +414,21 @@ def station_dialog(req, res):
 
             res['response']['text'] = f'Давно не виделись, {sessionStorage[user_id]["nick"]}! ' \
                 f'Твои очки: антонимы: {sessionStorage[user_id]["ant"]}, синонимы: {sessionStorage[user_id]["sin"]} ' \
-                f'паронимы: {sessionStorage[user_id]["par"]}. У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
-                                  'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
-                                  'паронимы и синонимы'
+                f'паронимы: {sessionStorage[user_id][
+                    "par"]}. У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
+                'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
+                'паронимы и синонимы'
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
         return
-            
+
     if sessionStorage[user_id]['nick'] is None:
         tag = str(random.randint(0, 10001))
         sessionStorage[user_id]['nick'] = req['request']['original_utterance'] + "#" + tag
         res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n' \
-                                  'У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
-                                  'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
-                                  'паронимы и синонимы'
+            'У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
+            'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
+            'паронимы и синонимы'
         res['user_state_update'] = {
             'nick': sessionStorage[user_id]['nick']
         }
@@ -433,7 +446,8 @@ def station_dialog(req, res):
                                   'Возвращайся в меню и выбирай режеим для игры!'
         sessionStorage[user_id]['mode'] = ''
         return
-    if 'меню' in req['request']['original_utterance'].lower():
+    if 'меню' in req['request']['original_utterance'].lower() or 'помочь' in req['request'][
+        'original_utterance'].lower() or 'что ты умеешь' in req['request']['original_utterance'].lower():
         res["response"]["text"] = 'У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
                                   'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
                                   'паронимы и синонимы'
@@ -477,7 +491,7 @@ def station_dialog(req, res):
             res['response']['text'] = f'{word}!'
             sessionStorage[user_id]['last'] = True
         else:
-            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id']-1]['answer'].split('/')
+            answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['id'] - 1]['answer'].split('/')
             for ans in answer:
                 if ans in req['request']['original_utterance'].lower():
                     res['response']['text'] = "Верно!"
@@ -522,7 +536,7 @@ def station_dialog(req, res):
                 res['response']['text'] = f"Играет {sessionStorage[user_id]['isPlaying']}! " \
                     f"{sessionStorage[user_id]['data'][sessionStorage[user_id]['multID']]['question']}."
             else:
-                if sessionStorage[user_id]['multID'] == 20: # 10 + 10 + 1
+                if sessionStorage[user_id]['multID'] == 20:  # 10 + 10 + 1
                     # ПРОВЕРКА
                     answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer'].split('/')
                     for ans in answer:
@@ -540,13 +554,15 @@ def station_dialog(req, res):
                     name2 = sessionStorage[user_id]['names'][1]
                     if sessionStorage[user_id]['multCount'][name1] == sessionStorage[user_id]['multCount'][name2]:
                         res['response']['text'] += f"Ничья! " \
-                            f"Оба игрока набрали по {sessionStorage[user_id]['multCount'][name1]} баллов." # pymorphy2!
+                            f"Оба игрока набрали по {sessionStorage[user_id]['multCount'][name1]} баллов."  # pymorphy2!
                     elif sessionStorage[user_id]['multCount'][name1] > sessionStorage[user_id]['multCount'][name2]:
                         res['response']['text'] += f"Победил игрок {name1} со счетом " \
-                            f"{sessionStorage[user_id]['multCount'][name1]}:{sessionStorage[user_id]['multCount'][name2]}"
+                            f"{sessionStorage[user_id]['multCount'][name1]}:{sessionStorage[user_id]['multCount'][
+                                name2]}"
                     else:
                         res['response']['text'] += f"Победил игрок {name2} со счетом " \
-                            f"{sessionStorage[user_id]['multCount'][name2]}:{sessionStorage[user_id]['multCount'][name2]}"
+                            f"{sessionStorage[user_id]['multCount'][name2]}:{sessionStorage[user_id]['multCount'][
+                                name2]}"
                     return
                 else:
                     answer = sessionStorage[user_id]['data'][sessionStorage[user_id]['multID'] - 1]['answer'].split('/')
@@ -563,12 +579,13 @@ def station_dialog(req, res):
                     res['response']['text'] += f"Играет {sessionStorage[user_id]['isPlaying']}! " \
                         f"{sessionStorage[user_id]['data'][sessionStorage[user_id]['multID']]['question']}."
             sessionStorage[user_id]['isPlaying'] = sessionStorage[user_id]['names'][0] \
-                    if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
+                if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else \
+            sessionStorage[user_id]['names'][1]
             sessionStorage[user_id]['multID'] += 1
     else:
         res['response']['text'] = 'Прости, не понимаю тебя. Выбери режим: игры на одного, мультиплеер или терминология'
     return
-    
+
 
 def get_first_name(req) -> list:
     names = []
@@ -588,8 +605,8 @@ def keep_alive():
 
 
 if __name__ == '__main__':
-    #from flask_ngrok import run_with_ngrok
-    #run_with_ngrok(app)
-    #app.run()
+    # from flask_ngrok import run_with_ngrok
+    # run_with_ngrok(app)
+    # app.run()
     keep_alive()
     # app.run()
