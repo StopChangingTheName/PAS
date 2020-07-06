@@ -372,7 +372,7 @@ def handle_dialog(req, res):
                     if sessionStorage[user_id]['names'][1] == sessionStorage[user_id]['isPlaying'] else sessionStorage[user_id]['names'][1]
             sessionStorage[user_id]['multID'] += 1
             res['response']['buttons'] = [
-                {'title': suggest, 'hide': False}
+                {'title': suggest, 'hide': True}
                 for suggest in sessionStorage[user_id]['slicedsuggests']
             ]
     else:
