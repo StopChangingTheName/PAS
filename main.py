@@ -57,26 +57,11 @@ def modes_list(phrase):
         "items": [
             {
                 "image_id": "1030494/3f3a4f2e06cee0e8a04c",
-                "title": "Антонимы",
-                "description": "Алиса тебе говорит слово, а ты должен подобрать антоним к нему!",
+                "title": "Игры на одного",
+                "description": "Внутри три режима — паронимы, антонимы, синонимы. "
+                               "Отвечай правильно, а затем проверяй рейтинг!",
                 "button": {
-                    "text": "Антонимы"
-                }
-            },
-            {
-                "image_id": "1533899/9abcc0382d7feea2d610",
-                "title": "Синонимы",
-                "description": "Подбери к слову Алисы верный синонимы!",
-                "button": {
-                    "text": "Синонимы"
-                }
-            },
-            {
-                "image_id": "1533899/0de49a4c564831a332eb",
-                "title": "Паронимы",
-                "description": "Подбери к слову Алисы верный пароним!",
-                "button": {
-                    "text": "Паронимы"
+                    "text": "Игры на одного"
                 }
             },
             {
@@ -85,6 +70,14 @@ def modes_list(phrase):
                 "description": "Нечем заняться с другом? Сыграй с ним в наш навык! Счет до 10 очков.",
                 "button": {
                     "text": "Мультиплеер"
+                }
+            },
+            {
+                "image_id": "1030494/3f3a4f2e06cee0e8a04c",
+                "title": "Терминология",
+                "description": "Вспомним, что такое паронимы, синонимы, антонимы. С примерами!",
+                "button": {
+                    "text": "Терминология"
                 }
             },
             {
@@ -98,6 +91,39 @@ def modes_list(phrase):
         ]
     }
 
+def for_one_player():
+    return {
+        "type": "ItemsList",
+        "header": {
+            "text": f"Игры на одного"
+        },
+        "items": [
+            {
+                "image_id": "1533899/0de49a4c564831a332eb",
+                "title": "Паронимы",
+                "description": "Подбери к слову Алисы верный пароним!",
+                "button": {
+                    "text": "Паронимы"
+                }
+            },
+            {
+                "image_id": "1030494/3f3a4f2e06cee0e8a04c",
+                "title": "Антонимы",
+                "description": "Алиса тебе говорит слово, а ты должен подобрать антоним к нему!",
+                "button": {
+                    "text": "Антонимы"
+                }
+            },
+            {
+                "image_id": "1533899/9abcc0382d7feea2d610",
+                "title": "Синонимы",
+                "description": "Подбери к слову Алисы верный синонимы!",
+                "button": {
+                    "text": "Синонимы"
+                }
+            }
+        ]
+    }
 def write_in_state(user_id):
     return {
         'nick': sessionStorage[user_id]['nick'],
@@ -193,6 +219,22 @@ def handle_dialog(req, res):
         sessionStorage[user_id]['mode'] = ''
         return
 
+    if 'игры на одного' in req['request']['original_utterance'].lower():
+        res["response"]["card"] = for_one_player()
+        res["response"]["text"] = "Выбери режим из предложенных!"
+        sessionStorage[user_id]['mode'] = ''
+        return
+
+    if 'терминология' in req['request']['original_utterance'].lower():
+        res["response"]["text"] = 'Немного терминологии.\n' \
+                                     'Паронимы — это слова, сходные по звучанию, но различающиеся лексическим значением, например, адресат — адресант.\n' \
+                                    'Антонимы — это слова, имеющие прямо противоположные лексические значения, например, огонь — вода.\n' \
+                                    'Синонимы — это слова, разные по написанию, но имеющие схожее значение, например, ветер — бриз.\n' \
+                                  'Возвращайся в меню и выбирай режеим для игры!'
+        sessionStorage[user_id]['mode'] = ''
+        res['response']['buttons'] = [{'title': "Меню", 'hide': True}]
+        return
+
     if 'антонимы' in req['request']['original_utterance'].lower():
         sessionStorage[user_id]['mode'] = 'антоним'
         antonym = copy.deepcopy(ant)
@@ -274,10 +316,6 @@ def handle_dialog(req, res):
                 sessionStorage[user_id]['names'] = names
                 print(sessionStorage[user_id]['names'])
                 res['response']['text'] = 'Я задам каждому по десять вопросов!\n' \
-                                          'Немного терминологии.\n' \
-                                          'Паронимы — это слова, сходные по звучанию, но различающиеся лексическим значением, например, адресат — адресант.\n' \
-                                          'Антонимы — это слова, имеющие прямо противоположные лексические значения, например, огонь — вода.\n' \
-                                          'Синонимы — это слова, разные по написанию, но имеющие схожее значение, например, ветер — бриз.\n' \
                                           'Скажи "Поехали!" — и мы начинаем!\n'
                 sessionStorage[user_id]['isPlaying'] = sessionStorage[user_id]['names'][0]
                 sessionStorage[user_id]['multCount'] = {
