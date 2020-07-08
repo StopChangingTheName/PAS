@@ -575,7 +575,7 @@ def station_dialog(req, res):
                             res['response']['text'] = 'Верно! '
                             break
                     else:
-                        res['response']['text'] = f"Ошибка, правильный ответ: {answer}! "
+                        res['response']['text'] = f"Ошибка, правильный ответ: {random.choice(answer)}! "
                     res['response']['text'] += f"Играет {sessionStorage[user_id]['isPlaying']}! " \
                         f"{sessionStorage[user_id]['data'][sessionStorage[user_id]['multID']]['question']}."
             sessionStorage[user_id]['isPlaying'] = sessionStorage[user_id]['names'][0] \
