@@ -417,7 +417,7 @@ def station_dialog(req, res):
                 f'паронимы: {sessionStorage[user_id][
                     "par"]}. У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
                 'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
-                'паронимы и синонимы'
+                'паронимы и синонимы. Если хочешь послушать про режимы ещё раз, скажи "помощь".'
         except Exception:
             res['response']['text'] = 'Добро пожаловать в словесную игру ПАС. Давай знакомиться! Назови свое имя.'
         return
@@ -428,7 +428,7 @@ def station_dialog(req, res):
         res['response']['text'] = f'Приятно познакомиться! Твой ник с тэгом: {sessionStorage[user_id]["nick"]}\n' \
             'У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
             'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
-            'паронимы и синонимы'
+            'паронимы и синонимы. Если прослушал, скажи "помощь"'
         res['user_state_update'] = {
             'nick': sessionStorage[user_id]['nick']
         }
@@ -446,7 +446,7 @@ def station_dialog(req, res):
                                   'Возвращайся в меню и выбирай режеим для игры!'
         sessionStorage[user_id]['mode'] = ''
         return
-    if 'меню' in req['request']['original_utterance'].lower() or 'помочь' in req['request'][
+    if 'меню' in req['request']['original_utterance'].lower() or 'помощь' in req['request'][
         'original_utterance'].lower() or 'что ты умеешь' in req['request']['original_utterance'].lower():
         res["response"]["text"] = 'У меня есть 3 режима: игры на одного, мультиплеер, в котором ты сможешь сыграть ' \
                                   'с другом, и, терминология, где ты сможешь вспомнить, что такое антонимы, ' \
@@ -583,7 +583,7 @@ def station_dialog(req, res):
             sessionStorage[user_id]['names'][1]
             sessionStorage[user_id]['multID'] += 1
     else:
-        res['response']['text'] = 'Прости, не понимаю тебя. Выбери режим: игры на одного, мультиплеер или терминология'
+        res['response']['text'] = 'Выбери режим: игры на одного, мультиплеер или терминология. Скажи "помощь", чтобы подробнее узнать о каждом режиме.'
     return
 
 
