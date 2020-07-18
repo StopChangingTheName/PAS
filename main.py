@@ -302,15 +302,17 @@ def handle_dialog(req, res):
                 if '+' in otvet:
                     res['response']['tts'] = f"Ты ошибся, правильный ответ: {otvet}."
                     res['response']['text'] = f"Ты ошибся, правильный ответ: {otvet.replace('+', '')}."
+                    res['response']['tts'] += f' Следующий вопрос: {word}!'
                 else:
                     res['response']['text'] = f"Ты ошибся, правильный ответ: {otvet}."
 
             res['response']['text'] += f' Следующий вопрос: {word}!'
-            if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
-                write_in_base(user_id)
-                random.shuffle(sessionStorage[user_id]['data'])
-                sessionStorage[user_id]['id'] = 0
+
         sessionStorage[user_id]['id'] += 1
+        if sessionStorage[user_id]['id'] == len(sessionStorage[user_id]['data']):
+            write_in_base(user_id)
+            random.shuffle(sessionStorage[user_id]['data'])
+            sessionStorage[user_id]['id'] = 0
         res['response']['buttons'] = [
             {'title': suggest, 'hide': True}
             for suggest in sessionStorage[user_id]['slicedsuggests']
